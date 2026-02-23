@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v3
     - name: actionlint
-      uses: raven-actions/actionlint@v2
+      uses: raven-actions/actionlint@v1
       with:
         pyflakes: false # we do not use python scripts
