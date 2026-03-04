@@ -2343,7 +2343,8 @@ LEAN_EXPORT lean_object* l_Lean_mkAuxDeclName___at___00Lean_Elab_Term_elabPrivat
 lean_object* l_Lean_Elab_Term_elabTermAndSynthesize(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 lean_object* l_Lean_Meta_mkAuxDefinitionFor(lean_object*, lean_object*, uint8_t, uint8_t, lean_object*, lean_object*, lean_object*, lean_object*);
 lean_object* l_Lean_Meta_setInlineAttribute(lean_object*, uint8_t, lean_object*, lean_object*, lean_object*, lean_object*);
-uint8_t l_Lean_isNoncomputable(lean_object*, lean_object*);
+extern lean_object* l_Lean_noncomputableExt;
+uint8_t l_Lean_isNoncomputable(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Lean_Elab_Term_elabPrivateDecl___lam__0(lean_object*, lean_object*, lean_object*, uint8_t, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_Lean_Elab_Term_elabPrivateDecl___lam__0___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 static const lean_string_object l_Lean_Elab_Term_elabPrivateDecl___closed__0_value = {.m_header = {.m_rc = 0, .m_cs_sz = 0, .m_other = 0, .m_tag = 249}, .m_size = 12, .m_capacity = 12, .m_length = 11, .m_data = "privateDecl"};
@@ -28375,15 +28376,22 @@ goto block_27;
 }
 else
 {
-lean_object* x_30; lean_object* x_31; uint8_t x_32; 
+lean_object* x_30; lean_object* x_31; lean_object* x_32; lean_object* x_33; lean_object* x_34; uint8_t x_35; 
 x_30 = lean_ctor_get(x_14, 0);
 lean_inc_ref(x_30);
 lean_dec(x_14);
 x_31 = lean_ctor_get(x_29, 0);
 lean_inc(x_31);
 lean_dec_ref(x_29);
-x_32 = l_Lean_isNoncomputable(x_30, x_31);
-if (x_32 == 0)
+x_32 = l_Lean_noncomputableExt;
+x_33 = lean_ctor_get(x_32, 0);
+lean_inc_ref(x_33);
+x_34 = lean_ctor_get(x_33, 2);
+lean_inc(x_34);
+lean_dec_ref(x_33);
+x_35 = l_Lean_isNoncomputable(x_30, x_31, x_34);
+lean_dec(x_34);
+if (x_35 == 0)
 {
 x_15 = x_4;
 goto block_27;
@@ -28397,11 +28405,11 @@ goto block_27;
 }
 else
 {
-uint8_t x_33; 
+uint8_t x_36; 
 lean_dec(x_14);
 lean_dec_ref(x_5);
-x_33 = 0;
-x_15 = x_33;
+x_36 = 0;
+x_15 = x_36;
 goto block_27;
 }
 block_27:

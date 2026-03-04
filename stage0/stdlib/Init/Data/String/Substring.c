@@ -4042,9 +4042,9 @@ LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Substring_Raw_to
 _start:
 {
 lean_object* x_5; lean_object* x_6; lean_object* x_7; lean_object* x_8; uint8_t x_9; 
-x_5 = lean_ctor_get(x_1, 0);
-x_6 = lean_ctor_get(x_1, 1);
-x_7 = lean_ctor_get(x_1, 2);
+x_5 = lean_ctor_get(x_2, 0);
+x_6 = lean_ctor_get(x_2, 1);
+x_7 = lean_ctor_get(x_2, 2);
 x_8 = lean_nat_sub(x_7, x_6);
 x_9 = lean_nat_dec_eq(x_3, x_8);
 lean_dec(x_8);
@@ -4086,7 +4086,7 @@ if (lean_is_exclusive(x_11)) {
  x_17 = lean_box(0);
 }
 x_18 = lean_unsigned_to_nat(0u);
-x_19 = lean_nat_dec_eq(x_2, x_18);
+x_19 = lean_nat_dec_eq(x_1, x_18);
 x_20 = 1;
 x_21 = lean_nat_add(x_6, x_3);
 lean_dec(x_3);
@@ -4272,8 +4272,8 @@ _start:
 {
 lean_object* x_5; 
 x_5 = l_WellFounded_opaqueFix_u2083___at___00Substring_Raw_toNat_x3f_spec__1___redArg(x_1, x_2, x_3, x_4);
-lean_dec(x_2);
-lean_dec_ref(x_1);
+lean_dec_ref(x_2);
+lean_dec(x_1);
 return x_5;
 }
 }
@@ -4416,9 +4416,9 @@ block_44:
 {
 lean_object* x_36; lean_object* x_37; lean_object* x_38; lean_object* x_39; lean_object* x_40; uint8_t x_41; 
 x_36 = l_String_Slice_positions(x_35);
-x_37 = l_WellFounded_opaqueFix_u2083___at___00Substring_Raw_toNat_x3f_spec__1___redArg(x_35, x_24, x_36, x_34);
-lean_dec(x_24);
+x_37 = l_WellFounded_opaqueFix_u2083___at___00Substring_Raw_toNat_x3f_spec__1___redArg(x_24, x_35, x_36, x_34);
 lean_dec_ref(x_35);
+lean_dec(x_24);
 x_38 = lean_ctor_get(x_37, 1);
 lean_inc(x_38);
 lean_dec_ref(x_37);
@@ -4587,8 +4587,8 @@ _start:
 {
 lean_object* x_8; 
 x_8 = l_WellFounded_opaqueFix_u2083___at___00Substring_Raw_toNat_x3f_spec__1(x_1, x_2, x_3, x_4, x_5, x_6, x_7);
-lean_dec(x_2);
-lean_dec_ref(x_1);
+lean_dec_ref(x_2);
+lean_dec(x_1);
 return x_8;
 }
 }

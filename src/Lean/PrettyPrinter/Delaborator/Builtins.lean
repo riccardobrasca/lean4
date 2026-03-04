@@ -47,8 +47,12 @@ def delabFVar : Delab := do
     let l ← fvarId.getDecl
     maybeAddBlockImplicit (mkIdent l.userName)
   catch _ =>
-    -- loose free variable, use internal name
-    maybeAddBlockImplicit <| mkIdent (fvarId.name.replacePrefix `_uniq `_fvar)
+    -- loose free variable
+    if ← getPPOption getPPFVarsAnonymous then
+      -- use internal name like `_fvar.22`
+      maybeAddBlockImplicit <| mkIdent (fvarId.name.replacePrefix `_uniq `_fvar)
+    else
+      maybeAddBlockImplicit <| mkIdent `_fvar._
 
 -- loose bound variable, use pseudo syntax
 @[builtin_delab bvar]

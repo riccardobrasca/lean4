@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: Lean.Syntax
-// Imports: public import Init.Data.Slice public import Init.Data.Hashable public import Lean.Data.Format public import Init.Data.Option.Coe import Init.Data.Range.Polymorphic.Iterators import Init.Data.ToString.Macro import Init.Omega import Init.Syntax
+// Imports: public import Init.Data.Slice public import Init.Data.Hashable public import Lean.Data.Format public import Init.Data.Option.Coe public import Init.Data.String.Hashable import Init.Data.Range.Polymorphic.Iterators import Init.Data.ToString.Macro import Init.Omega import Init.Syntax
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -73,7 +73,7 @@ LEAN_EXPORT lean_object* l_Lean_Syntax_instBEqRange_beq___boxed(lean_object*, le
 static const lean_closure_object l_Lean_Syntax_instBEqRange___closed__0_value = {.m_header = {.m_rc = 0, .m_cs_sz = sizeof(lean_closure_object) + sizeof(void*)*0, .m_other = 0, .m_tag = 245}, .m_fun = (void*)l_Lean_Syntax_instBEqRange_beq___boxed, .m_arity = 2, .m_num_fixed = 0, .m_objs = {} };
 static const lean_object* l_Lean_Syntax_instBEqRange___closed__0 = (const lean_object*)&l_Lean_Syntax_instBEqRange___closed__0_value;
 LEAN_EXPORT const lean_object* l_Lean_Syntax_instBEqRange = (const lean_object*)&l_Lean_Syntax_instBEqRange___closed__0_value;
-uint64_t lean_uint64_of_nat(lean_object*);
+uint64_t l_String_instHashableRaw_hash(lean_object*);
 uint64_t lean_uint64_mix_hash(uint64_t, uint64_t);
 LEAN_EXPORT uint64_t l_Lean_Syntax_instHashableRange_hash(lean_object*);
 LEAN_EXPORT lean_object* l_Lean_Syntax_instHashableRange_hash___boxed(lean_object*);
@@ -894,9 +894,9 @@ lean_object* x_2; lean_object* x_3; uint64_t x_4; uint64_t x_5; uint64_t x_6; ui
 x_2 = lean_ctor_get(x_1, 0);
 x_3 = lean_ctor_get(x_1, 1);
 x_4 = 0;
-x_5 = lean_uint64_of_nat(x_2);
+x_5 = l_String_instHashableRaw_hash(x_2);
 x_6 = lean_uint64_mix_hash(x_4, x_5);
-x_7 = lean_uint64_of_nat(x_3);
+x_7 = l_String_instHashableRaw_hash(x_3);
 x_8 = lean_uint64_mix_hash(x_6, x_7);
 return x_8;
 }
@@ -4810,7 +4810,7 @@ _start:
 lean_object* x_1; lean_object* x_2; lean_object* x_3; lean_object* x_4; lean_object* x_5; lean_object* x_6; 
 x_1 = ((lean_object*)(l_Lean_Syntax_identComponents___closed__4));
 x_2 = lean_unsigned_to_nat(9u);
-x_3 = lean_unsigned_to_nat(354u);
+x_3 = lean_unsigned_to_nat(355u);
 x_4 = ((lean_object*)(l_Lean_Syntax_identComponents___closed__3));
 x_5 = ((lean_object*)(l_Lean_Syntax_identComponents___closed__2));
 x_6 = l_mkPanicMessageWithDecl(x_5, x_4, x_3, x_2, x_1);
@@ -8720,6 +8720,7 @@ lean_object* initialize_Init_Data_Slice(uint8_t builtin);
 lean_object* initialize_Init_Data_Hashable(uint8_t builtin);
 lean_object* initialize_Lean_Data_Format(uint8_t builtin);
 lean_object* initialize_Init_Data_Option_Coe(uint8_t builtin);
+lean_object* initialize_Init_Data_String_Hashable(uint8_t builtin);
 lean_object* initialize_Init_Data_Range_Polymorphic_Iterators(uint8_t builtin);
 lean_object* initialize_Init_Data_ToString_Macro(uint8_t builtin);
 lean_object* initialize_Init_Omega(uint8_t builtin);
@@ -8739,6 +8740,9 @@ res = initialize_Lean_Data_Format(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_Init_Data_Option_Coe(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_Init_Data_String_Hashable(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_Init_Data_Range_Polymorphic_Iterators(builtin);

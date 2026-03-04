@@ -594,7 +594,7 @@ lean_object* lean_nat_sub(lean_object*, lean_object*);
 lean_object* lean_string_utf8_next_fast(lean_object*, lean_object*);
 uint32_t lean_string_utf8_get_fast(lean_object*, lean_object*);
 uint8_t lean_uint32_dec_eq(uint32_t, uint32_t);
-LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(lean_object*, lean_object*, lean_object*, lean_object*, uint8_t, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(lean_object*, uint8_t, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 uint8_t lean_uint32_dec_le(uint32_t, uint32_t);
 LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 lean_object* lean_string_utf8_byte_size(lean_object*);
@@ -605,7 +605,7 @@ lean_object* l_String_Slice_Pos_nextn(lean_object*, lean_object*, lean_object*);
 lean_object* l_String_Slice_positions(lean_object*);
 LEAN_EXPORT uint8_t l_Lean_Meta_isHCongrReservedNameSuffix(lean_object*);
 LEAN_EXPORT lean_object* l_Lean_Meta_isHCongrReservedNameSuffix___boxed(lean_object*);
-LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0(lean_object*, lean_object*, lean_object*, lean_object*, uint8_t, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0(lean_object*, uint8_t, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 static const lean_string_object l_Lean_Meta_congrSimpSuffix___closed__0_value = {.m_header = {.m_rc = 0, .m_cs_sz = 0, .m_other = 0, .m_tag = 249}, .m_size = 11, .m_capacity = 11, .m_length = 10, .m_data = "congr_simp"};
 static const lean_object* l_Lean_Meta_congrSimpSuffix___closed__0 = (const lean_object*)&l_Lean_Meta_congrSimpSuffix___closed__0_value;
@@ -9902,12 +9902,12 @@ x_10 = l_Lean_Meta_mkCongrSimp_x3f(x_1, x_9, x_3, x_4, x_5, x_6, x_7);
 return x_10;
 }
 }
-LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4, uint8_t x_5, lean_object* x_6, lean_object* x_7) {
+LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(lean_object* x_1, uint8_t x_2, lean_object* x_3, lean_object* x_4, lean_object* x_5, lean_object* x_6, lean_object* x_7) {
 _start:
 {
 lean_object* x_8; lean_object* x_9; lean_object* x_10; uint8_t x_11; 
-x_8 = lean_ctor_get(x_1, 1);
-x_9 = lean_ctor_get(x_1, 2);
+x_8 = lean_ctor_get(x_3, 1);
+x_9 = lean_ctor_get(x_3, 2);
 x_10 = lean_nat_sub(x_9, x_8);
 x_11 = lean_nat_dec_eq(x_6, x_10);
 lean_dec(x_10);
@@ -9949,12 +9949,12 @@ if (lean_is_exclusive(x_13)) {
  x_19 = lean_box(0);
 }
 x_20 = lean_unsigned_to_nat(0u);
-x_21 = lean_nat_dec_eq(x_4, x_20);
-x_22 = lean_nat_add(x_2, x_6);
+x_21 = lean_nat_dec_eq(x_1, x_20);
+x_22 = lean_nat_add(x_4, x_6);
 lean_dec(x_6);
-x_23 = lean_string_utf8_next_fast(x_3, x_22);
-x_24 = lean_nat_sub(x_23, x_2);
-x_25 = lean_string_utf8_get_fast(x_3, x_22);
+x_23 = lean_string_utf8_next_fast(x_5, x_22);
+x_24 = lean_nat_sub(x_23, x_4);
+x_25 = lean_string_utf8_get_fast(x_5, x_22);
 lean_dec(x_22);
 x_57 = 48;
 x_58 = lean_uint32_dec_le(x_57, x_25);
@@ -10116,7 +10116,7 @@ goto block_50;
 else
 {
 x_45 = x_51;
-x_46 = x_5;
+x_46 = x_2;
 goto block_50;
 }
 }
@@ -10133,12 +10133,12 @@ LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCon
 _start:
 {
 uint8_t x_8; lean_object* x_9; 
-x_8 = lean_unbox(x_5);
-x_9 = l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(x_1, x_2, x_3, x_4, x_8, x_6, x_7);
+x_8 = lean_unbox(x_2);
+x_9 = l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(x_1, x_8, x_3, x_4, x_5, x_6, x_7);
+lean_dec_ref(x_5);
 lean_dec(x_4);
 lean_dec_ref(x_3);
-lean_dec(x_2);
-lean_dec_ref(x_1);
+lean_dec(x_1);
 return x_9;
 }
 }
@@ -10210,11 +10210,11 @@ x_20 = lean_alloc_ctor(0, 2, 0);
 lean_ctor_set(x_20, 0, x_19);
 lean_ctor_set(x_20, 1, x_18);
 x_21 = l_String_Slice_positions(x_13);
-x_22 = l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(x_13, x_10, x_1, x_11, x_7, x_21, x_20);
-lean_dec(x_11);
+x_22 = l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0___redArg(x_11, x_7, x_13, x_10, x_1, x_21, x_20);
 lean_dec_ref(x_1);
 lean_dec(x_10);
 lean_dec_ref(x_13);
+lean_dec(x_11);
 x_23 = lean_ctor_get(x_22, 1);
 lean_inc(x_23);
 lean_dec_ref(x_22);
@@ -10261,7 +10261,7 @@ x_3 = lean_box(x_2);
 return x_3;
 }
 }
-LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4, uint8_t x_5, lean_object* x_6, lean_object* x_7, lean_object* x_8, lean_object* x_9, lean_object* x_10) {
+LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0(lean_object* x_1, uint8_t x_2, lean_object* x_3, lean_object* x_4, lean_object* x_5, lean_object* x_6, lean_object* x_7, lean_object* x_8, lean_object* x_9, lean_object* x_10) {
 _start:
 {
 lean_object* x_11; 
@@ -10273,12 +10273,12 @@ LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCon
 _start:
 {
 uint8_t x_11; lean_object* x_12; 
-x_11 = lean_unbox(x_5);
-x_12 = l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0(x_1, x_2, x_3, x_4, x_11, x_6, x_7, x_8, x_9, x_10);
+x_11 = lean_unbox(x_2);
+x_12 = l_WellFounded_opaqueFix_u2083___at___00Lean_Meta_isHCongrReservedNameSuffix_spec__0(x_1, x_11, x_3, x_4, x_5, x_6, x_7, x_8, x_9, x_10);
+lean_dec_ref(x_5);
 lean_dec(x_4);
 lean_dec_ref(x_3);
-lean_dec(x_2);
-lean_dec_ref(x_1);
+lean_dec(x_1);
 return x_12;
 }
 }

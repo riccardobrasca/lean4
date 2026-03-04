@@ -8195,6 +8195,8 @@ x_8 = lean_ctor_get(x_7, 0);
 lean_inc(x_8);
 lean_dec_ref(x_7);
 x_9 = l_Lean_IR_compile(x_8, x_4, x_5);
+lean_dec(x_5);
+lean_dec_ref(x_4);
 return x_9;
 }
 else

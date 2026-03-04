@@ -851,8 +851,8 @@ LEAN_EXPORT lean_object* l_WellFounded_opaqueFix_u2083___at___00__private_Lean_M
 _start:
 {
 lean_object* x_7; lean_object* x_8; lean_object* x_9; uint8_t x_10; 
-x_7 = lean_ctor_get(x_1, 1);
-x_8 = lean_ctor_get(x_1, 2);
+x_7 = lean_ctor_get(x_2, 1);
+x_8 = lean_ctor_get(x_2, 2);
 x_9 = lean_nat_sub(x_8, x_7);
 x_10 = lean_nat_dec_eq(x_5, x_9);
 lean_dec(x_9);
@@ -894,13 +894,13 @@ if (lean_is_exclusive(x_12)) {
  x_18 = lean_box(0);
 }
 x_19 = lean_unsigned_to_nat(0u);
-x_20 = lean_nat_dec_eq(x_4, x_19);
+x_20 = lean_nat_dec_eq(x_1, x_19);
 x_21 = 1;
-x_22 = lean_nat_add(x_2, x_5);
+x_22 = lean_nat_add(x_3, x_5);
 lean_dec(x_5);
-x_23 = lean_string_utf8_next_fast(x_3, x_22);
-x_24 = lean_nat_sub(x_23, x_2);
-x_25 = lean_string_utf8_get_fast(x_3, x_22);
+x_23 = lean_string_utf8_next_fast(x_4, x_22);
+x_24 = lean_nat_sub(x_23, x_3);
+x_25 = lean_string_utf8_get_fast(x_4, x_22);
 lean_dec(x_22);
 x_57 = 48;
 x_58 = lean_uint32_dec_le(x_57, x_25);
@@ -1080,10 +1080,10 @@ _start:
 {
 lean_object* x_7; 
 x_7 = l_WellFounded_opaqueFix_u2083___at___00__private_Lean_Meta_Tactic_Grind_Intro_0__Lean_Meta_Grind_mkBaseName_spec__0___redArg(x_1, x_2, x_3, x_4, x_5, x_6);
-lean_dec(x_4);
-lean_dec_ref(x_3);
-lean_dec(x_2);
-lean_dec_ref(x_1);
+lean_dec_ref(x_4);
+lean_dec(x_3);
+lean_dec_ref(x_2);
+lean_dec(x_1);
 return x_7;
 }
 }
@@ -1263,9 +1263,9 @@ x_58 = lean_alloc_ctor(0, 2, 0);
 lean_ctor_set(x_58, 0, x_57);
 lean_ctor_set(x_58, 1, x_56);
 x_59 = l_String_Slice_positions(x_50);
-x_60 = l_WellFounded_opaqueFix_u2083___at___00__private_Lean_Meta_Tactic_Grind_Intro_0__Lean_Meta_Grind_mkBaseName_spec__0___redArg(x_50, x_46, x_29, x_47, x_59, x_58);
-lean_dec(x_47);
+x_60 = l_WellFounded_opaqueFix_u2083___at___00__private_Lean_Meta_Tactic_Grind_Intro_0__Lean_Meta_Grind_mkBaseName_spec__0___redArg(x_47, x_50, x_46, x_29, x_59, x_58);
 lean_dec_ref(x_50);
+lean_dec(x_47);
 x_61 = lean_ctor_get(x_60, 1);
 lean_inc(x_61);
 lean_dec_ref(x_60);
@@ -1431,10 +1431,10 @@ _start:
 {
 lean_object* x_10; 
 x_10 = l_WellFounded_opaqueFix_u2083___at___00__private_Lean_Meta_Tactic_Grind_Intro_0__Lean_Meta_Grind_mkBaseName_spec__0(x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8, x_9);
-lean_dec(x_4);
-lean_dec_ref(x_3);
-lean_dec(x_2);
-lean_dec_ref(x_1);
+lean_dec_ref(x_4);
+lean_dec(x_3);
+lean_dec_ref(x_2);
+lean_dec(x_1);
 return x_10;
 }
 }

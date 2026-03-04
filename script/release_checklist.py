@@ -11,7 +11,7 @@ IMPORTANT: Keep this documentation up-to-date when modifying the script's behavi
 What this script does:
 1. Validates preliminary Lean4 release infrastructure:
    - Checks that the release branch (releases/vX.Y.0) exists
-   - Verifies CMake version settings are correct
+   - Verifies CMake version settings are correct (both src/ and stage0/)
    - Confirms the release tag exists
    - Validates the release page exists on GitHub (created automatically by CI after tag push)
    - Checks the release notes page on lean-lang.org (updated while bumping the `reference-manual` repository)
@@ -324,6 +324,42 @@ def check_cmake_version(repo_url, branch, version_major, version_minor, github_t
             return False
 
     print(f"  ✅ CMake version settings are correct in {cmake_file_path}")
+    return True
+
+def check_stage0_version(repo_url, branch, version_major, version_minor, github_token):
+    """Verify that stage0/src/CMakeLists.txt has the same version as src/CMakeLists.txt.
+
+    The stage0 pre-built binaries stamp .olean headers with their baked-in version.
+    If stage0 has a different version (e.g. from a 'begin development cycle' bump),
+    the release tarball will contain .olean files with the wrong version.
+    """
+    stage0_cmake = "stage0/src/CMakeLists.txt"
+    content = get_branch_content(repo_url, branch, stage0_cmake, github_token)
+    if content is None:
+        print(f"  ❌ Could not retrieve {stage0_cmake} from {branch}")
+        return False
+
+    errors = []
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("set(LEAN_VERSION_MAJOR "):
+            actual = stripped.split()[-1].rstrip(")")
+            if actual != str(version_major):
+                errors.append(f"LEAN_VERSION_MAJOR: expected {version_major}, found {actual}")
+        elif stripped.startswith("set(LEAN_VERSION_MINOR "):
+            actual = stripped.split()[-1].rstrip(")")
+            if actual != str(version_minor):
+                errors.append(f"LEAN_VERSION_MINOR: expected {version_minor}, found {actual}")
+
+    if errors:
+        print(f"  ❌ stage0 version mismatch in {stage0_cmake}:")
+        for error in errors:
+            print(f"     {error}")
+        print(f"     The stage0 compiler stamps .olean headers with its baked-in version.")
+        print(f"     Run `make update-stage0` to rebuild stage0 with the correct version.")
+        return False
+
+    print(f"  ✅ stage0 version matches in {stage0_cmake}")
     return True
 
 def extract_org_repo_from_url(repo_url):
@@ -679,6 +715,9 @@ def main():
         print(f"  ✅ Branch {branch_name} exists")
         # Check CMake version settings
         if not check_cmake_version(lean_repo_url, branch_name, version_major, version_minor, github_token):
+            lean4_success = False
+        # Check that stage0 version matches (stage0 stamps .olean headers with its version)
+        if not check_stage0_version(lean_repo_url, branch_name, version_major, version_minor, github_token):
             lean4_success = False
 
     # Check for tag and release page

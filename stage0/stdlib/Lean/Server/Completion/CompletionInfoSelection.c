@@ -90,7 +90,7 @@ size_t lean_uint64_to_usize(uint64_t);
 size_t lean_usize_sub(size_t, size_t);
 size_t lean_usize_land(size_t, size_t);
 LEAN_EXPORT lean_object* l_Std_DHashMap_Internal_AssocList_foldlM___at___00__private_Std_Data_DHashMap_Internal_Defs_0__Std_DHashMap_Internal_Raw_u2080_expand_go___at___00Std_DHashMap_Internal_Raw_u2080_expand___at___00Std_DHashMap_Internal_Raw_u2080_Const_alter___at___00Array_groupByKey___at___00__private_Lean_Server_Completion_CompletionInfoSelection_0__Lean_Server_Completion_computePrioritizedCompletionPartitions_spec__2_spec__2_spec__4_spec__8_spec__10___redArg(lean_object*, lean_object*);
-uint64_t lean_uint64_of_nat(lean_object*);
+uint64_t l_String_instHashableRaw_hash(lean_object*);
 lean_object* lean_array_fget(lean_object*, lean_object*);
 lean_object* lean_array_fset(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l___private_Std_Data_DHashMap_Internal_Defs_0__Std_DHashMap_Internal_Raw_u2080_expand_go___at___00Std_DHashMap_Internal_Raw_u2080_expand___at___00Std_DHashMap_Internal_Raw_u2080_Const_alter___at___00Array_groupByKey___at___00__private_Lean_Server_Completion_CompletionInfoSelection_0__Lean_Server_Completion_computePrioritizedCompletionPartitions_spec__2_spec__2_spec__4_spec__8___redArg(lean_object*, lean_object*, lean_object*);
@@ -1395,7 +1395,7 @@ else
 {
 lean_object* x_31; uint64_t x_32; uint64_t x_33; uint64_t x_34; 
 x_31 = lean_ctor_get(x_8, 0);
-x_32 = lean_uint64_of_nat(x_31);
+x_32 = l_String_instHashableRaw_hash(x_31);
 x_33 = 13;
 x_34 = lean_uint64_mix_hash(x_32, x_33);
 x_10 = x_29;
@@ -1723,7 +1723,7 @@ return x_23;
 LEAN_EXPORT lean_object* l_Std_DHashMap_Internal_Raw_u2080_Const_alter___at___00Array_groupByKey___at___00__private_Lean_Server_Completion_CompletionInfoSelection_0__Lean_Server_Completion_computePrioritizedCompletionPartitions_spec__2_spec__2___redArg(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
 _start:
 {
-lean_object* x_4; size_t x_5; lean_object* x_6; lean_object* x_7; lean_object* x_11; lean_object* x_12; lean_object* x_13; lean_object* x_14; lean_object* x_15; lean_object* x_16; uint64_t x_17; uint64_t x_18; uint64_t x_55; uint8_t x_62; 
+lean_object* x_4; lean_object* x_5; size_t x_6; lean_object* x_7; lean_object* x_11; lean_object* x_12; lean_object* x_13; lean_object* x_14; lean_object* x_15; lean_object* x_16; uint64_t x_17; uint64_t x_18; uint64_t x_55; uint8_t x_62; 
 x_11 = lean_ctor_get(x_2, 0);
 lean_inc(x_11);
 x_12 = lean_ctor_get(x_2, 1);
@@ -1757,7 +1757,7 @@ goto block_61;
 block_10:
 {
 lean_object* x_8; lean_object* x_9; 
-x_8 = lean_array_uset(x_6, x_5, x_4);
+x_8 = lean_array_uset(x_4, x_6, x_5);
 x_9 = lean_alloc_ctor(0, 2, 0);
 lean_ctor_set(x_9, 0, x_7);
 lean_ctor_set(x_9, 1, x_8);
@@ -1845,17 +1845,17 @@ lean_object* x_52; lean_object* x_53;
 x_52 = lean_unsigned_to_nat(1u);
 x_53 = lean_nat_sub(x_11, x_52);
 lean_dec(x_11);
-x_4 = x_50;
-x_5 = x_30;
-x_6 = x_49;
+x_4 = x_49;
+x_5 = x_50;
+x_6 = x_30;
 x_7 = x_53;
 goto block_10;
 }
 else
 {
-x_4 = x_50;
-x_5 = x_30;
-x_6 = x_49;
+x_4 = x_49;
+x_5 = x_50;
+x_6 = x_30;
 x_7 = x_11;
 goto block_10;
 }
@@ -1875,7 +1875,7 @@ else
 {
 lean_object* x_57; uint64_t x_58; uint64_t x_59; uint64_t x_60; 
 x_57 = lean_ctor_get(x_15, 0);
-x_58 = lean_uint64_of_nat(x_57);
+x_58 = l_String_instHashableRaw_hash(x_57);
 x_59 = 13;
 x_60 = lean_uint64_mix_hash(x_58, x_59);
 x_17 = x_55;
