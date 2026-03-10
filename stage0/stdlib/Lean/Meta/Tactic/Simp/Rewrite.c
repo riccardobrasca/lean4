@@ -34666,8 +34666,8 @@ return x_101;
 else
 {
 lean_object* x_103; 
-lean_dec_ref(x_101);
 lean_dec(x_102);
+lean_dec_ref(x_101);
 lean_inc(x_8);
 lean_inc_ref(x_7);
 lean_inc(x_6);
@@ -34694,8 +34694,8 @@ return x_103;
 }
 else
 {
-lean_dec(x_104);
 lean_dec_ref(x_103);
+lean_dec(x_104);
 x_11 = x_2;
 x_12 = x_3;
 x_13 = x_4;

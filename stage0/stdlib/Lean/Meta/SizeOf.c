@@ -12353,8 +12353,8 @@ else
 {
 uint8_t x_134; 
 lean_dec(x_35);
-lean_dec_ref(x_33);
 lean_dec(x_34);
+lean_dec_ref(x_33);
 lean_dec(x_31);
 lean_dec_ref(x_30);
 lean_dec(x_29);
@@ -12850,8 +12850,8 @@ else
 {
 lean_object* x_237; lean_object* x_238; lean_object* x_239; 
 lean_dec(x_185);
-lean_dec_ref(x_183);
 lean_dec(x_184);
+lean_dec_ref(x_183);
 lean_dec(x_181);
 lean_dec_ref(x_180);
 lean_dec(x_179);

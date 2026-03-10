@@ -15651,7 +15651,7 @@ lean_inc_ref(x_15);
 lean_inc(x_14);
 lean_inc_ref(x_13);
 lean_inc(x_12);
-x_20 = lean_dsimp(x_11, x_12, x_13, x_14, x_15, x_16, x_17, x_18);
+x_20 = lean_dsimp(x_10, x_12, x_13, x_14, x_15, x_16, x_17, x_18);
 if (lean_obj_tag(x_20) == 0)
 {
 lean_object* x_21; lean_object* x_22; uint8_t x_23; uint8_t x_24; lean_object* x_25; 
@@ -15662,7 +15662,7 @@ x_22 = l_Lean_Expr_bindingName_x21(x_1);
 x_23 = l_Lean_Expr_bindingInfo_x21(x_1);
 lean_dec_ref(x_1);
 x_24 = 0;
-x_25 = l_Lean_Meta_withLocalDecl___at___00__private_Lean_Meta_Tactic_Simp_Main_0__Lean_Meta_Simp_lambdaTelescopeDSimp_go_spec__0___redArg(x_22, x_23, x_21, x_10, x_24, x_12, x_13, x_14, x_15, x_16, x_17, x_18);
+x_25 = l_Lean_Meta_withLocalDecl___at___00__private_Lean_Meta_Tactic_Simp_Main_0__Lean_Meta_Simp_lambdaTelescopeDSimp_go_spec__0___redArg(x_22, x_23, x_21, x_11, x_24, x_12, x_13, x_14, x_15, x_16, x_17, x_18);
 return x_25;
 }
 else
@@ -15675,7 +15675,7 @@ lean_dec_ref(x_15);
 lean_dec(x_14);
 lean_dec_ref(x_13);
 lean_dec(x_12);
-lean_dec_ref(x_10);
+lean_dec_ref(x_11);
 lean_dec_ref(x_1);
 x_26 = !lean_is_exclusive(x_20);
 if (x_26 == 0)
@@ -15799,8 +15799,8 @@ x_61 = lean_unbox(x_57);
 lean_dec(x_57);
 if (x_61 == 0)
 {
-x_10 = x_60;
-x_11 = x_55;
+x_10 = x_55;
+x_11 = x_60;
 x_12 = x_30;
 x_13 = x_31;
 x_14 = x_32;
@@ -15868,8 +15868,8 @@ else
 {
 lean_dec(x_64);
 lean_dec(x_63);
-x_10 = x_60;
-x_11 = x_55;
+x_10 = x_55;
+x_11 = x_60;
 x_12 = x_30;
 x_13 = x_31;
 x_14 = x_32;

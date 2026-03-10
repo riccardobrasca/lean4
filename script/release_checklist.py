@@ -477,7 +477,10 @@ def get_pr_ci_status(repo_url, pr_number, github_token):
     conclusions = [run['conclusion'] for run in check_runs if run.get('status') == 'completed']
     in_progress = [run for run in check_runs if run.get('status') in ['queued', 'in_progress']]
 
+    failed = sum(1 for c in conclusions if c in ['failure', 'timed_out', 'action_required'])
     if in_progress:
+        if failed > 0:
+            return "failure", f"{failed} check(s) failing, {len(in_progress)} still in progress"
         return "pending", f"{len(in_progress)} check(s) in progress"
 
     if not conclusions:
@@ -486,7 +489,6 @@ def get_pr_ci_status(repo_url, pr_number, github_token):
     if all(c == 'success' for c in conclusions):
         return "success", f"All {len(conclusions)} checks passed"
 
-    failed = sum(1 for c in conclusions if c in ['failure', 'timed_out', 'action_required'])
     if failed > 0:
         return "failure", f"{failed} check(s) failed"
 
@@ -1004,14 +1006,15 @@ def main():
         # Find the actual minor version in CMakeLists.txt
         for line in cmake_lines:
             if line.strip().startswith("set(LEAN_VERSION_MINOR "):
-                actual_minor = int(line.split()[-1].rstrip(")"))
+                m = re.search(r'set\(LEAN_VERSION_MINOR\s+(\d+)', line)
+                actual_minor = int(m.group(1)) if m else 0
                 version_minor_correct = actual_minor >= next_minor
                 break
         else:
             version_minor_correct = False
             
         is_release_correct = any(
-            l.strip().startswith("set(LEAN_VERSION_IS_RELEASE 0)") 
+            re.match(r'set\(LEAN_VERSION_IS_RELEASE\s+0[\s)]', l.strip())
             for l in cmake_lines
         )
         
