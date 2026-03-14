@@ -1262,8 +1262,8 @@ protected theorem pow_lt_pow_iff_left {a b n : Nat} (hn : n ≠ 0) : a ^ n < b ^
 
 @[simp high] protected theorem pow_eq_zero {a : Nat} : ∀ {n : Nat}, a ^ n = 0 ↔ a = 0 ∧ n ≠ 0
   | 0 => by simp
-  | n + 1 => by rw [Nat.pow_succ, mul_eq_zero, Nat.pow_eq_zero]
-                exact ⟨by sorry, by omega⟩
+  | n + 1 => by rw [Nat.pow_succ, mul_eq_zero, Nat.pow_eq_zero]; refine ⟨fun h ↦ ⟨?_, ?_⟩, ?_⟩ <;>
+                omega
 
 theorem le_self_pow (hn : n ≠ 0) : ∀ a : Nat, a ≤ a ^ n
   | 0 => zero_le _
