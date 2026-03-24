@@ -27,7 +27,8 @@ open Nat (succ)
 
 namespace Int
 
-@[simp high] theorem natCast_eq_zero {n : Nat} : (n : Int) = 0 ↔ n = 0 := by omega
+@[simp high] theorem natCast_eq_zero {n : Nat} : (n : Int) = 0 ↔ n = 0 :=
+  ⟨by omega, by omega⟩
 
 instance {n : Nat} [NeZero n] : NeZero (n : Int) := ⟨mt Int.natCast_eq_zero.mp (NeZero.ne _)⟩
 instance {n : Nat} [NeZero n] : NeZero (no_index (OfNat.ofNat n) : Int) :=
@@ -887,8 +888,9 @@ theorem natAbs_ediv (a : Int) (b : Int) : natAbs (a / b) = natAbs a / natAbs b +
       simp only [this, false_or]
       split <;> rename_i h
       · simp [-natCast_ediv]
-      · rw [Nat.succ_div, if_neg h, sign_eq_one_of_pos (by omega), Int.sub_eq_add_neg, ← Int.neg_add, natAbs_neg]
-        norm_cast
+      · rw [Nat.succ_div, if_neg h, sign_eq_one_of_pos, Int.sub_eq_add_neg, ← Int.neg_add, natAbs_neg]
+        · norm_cast
+        · norm_cast; norm_cast at hb; exact Nat.ne_zero_iff_zero_lt.mp hb
 
 theorem natAbs_ediv_of_nonneg {a b : Int} (ha : 0 ≤ a) : (a / b).natAbs = a.natAbs / b.natAbs := by
   rw [natAbs_ediv, if_pos (Or.inl ha), Nat.add_zero]

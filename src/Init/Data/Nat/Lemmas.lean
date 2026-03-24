@@ -214,9 +214,9 @@ protected theorem eq_zero_of_add_eq_zero_right (h : n + m = 0) : n = 0 :=
 protected theorem add_left_inj {n : Nat} : m + n = k + n ↔ m = k := Nat.add_right_cancel_iff
 protected theorem add_right_inj {n : Nat} : n + m = n + k ↔ m = k := Nat.add_left_cancel_iff
 
-@[simp high] protected theorem add_eq_left {a b : Nat} : a + b = a ↔ b = 0 := by omega
-@[simp high] protected theorem add_eq_right {a b : Nat} : a + b = b ↔ a = 0 := by omega
-@[simp high] protected theorem left_eq_add {a b : Nat} : a = a + b ↔ b = 0 := by omega
+@[simp high] protected theorem add_eq_left {a b : Nat} : a + b = a ↔ b = 0 := ⟨by omega, by omega⟩
+@[simp high] protected theorem add_eq_right {a b : Nat} : a + b = b ↔ a = 0 := ⟨by omega, by omega⟩
+@[simp high] protected theorem left_eq_add {a b : Nat} : a = a + b ↔ b = 0 := ⟨by omega, by omega⟩
 @[simp high] protected theorem right_eq_add {a b : Nat} : b = a + b ↔ a = 0 := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · induction b with
@@ -264,8 +264,8 @@ protected theorem add_pos_left (h : 0 < m) (n) : 0 < m + n :=
 protected theorem add_self_ne_one : ∀ n, n + n ≠ 1
   | n+1, h => by rw [Nat.succ_add, Nat.succ.injEq] at h; contradiction
 
-theorem le_iff_lt_add_one : x ≤ y ↔ x < y + 1 := by
-  omega
+theorem le_iff_lt_add_one : x ≤ y ↔ x < y + 1 :=
+  ⟨by omega, by omega⟩
 
 @[deprecated Nat.add_eq_zero_iff (since := "2025-10-26")]
 protected theorem add_eq_zero : m + n = 0 ↔ m = 0 ∧ n = 0 := by omega
@@ -1262,7 +1262,8 @@ protected theorem pow_lt_pow_iff_left {a b n : Nat} (hn : n ≠ 0) : a ^ n < b ^
 
 @[simp high] protected theorem pow_eq_zero {a : Nat} : ∀ {n : Nat}, a ^ n = 0 ↔ a = 0 ∧ n ≠ 0
   | 0 => by simp
-  | n + 1 => by rw [Nat.pow_succ, mul_eq_zero, Nat.pow_eq_zero]; omega
+  | n + 1 => by rw [Nat.pow_succ, mul_eq_zero, Nat.pow_eq_zero]; refine ⟨fun h ↦ ⟨?_, ?_⟩, ?_⟩ <;>
+                omega
 
 theorem le_self_pow (hn : n ≠ 0) : ∀ a : Nat, a ≤ a ^ n
   | 0 => zero_le _

@@ -58,7 +58,7 @@ theorem lt_div_iff_mul_lt (h : 0 < k) : x < y / k ↔ x * k < y - (k - 1) := by
 
 theorem div_le_iff_le_mul (h : 0 < k) : x / k ≤ y ↔ x ≤ y * k + k - 1 := by
   rw [le_iff_lt_add_one, Nat.div_lt_iff_lt_mul h, Nat.add_one_mul]
-  omega
+  exact ⟨by omega, by omega⟩
 
 theorem le_mul_iff_le_left (hz : 0 < z) :
     x ≤ y * z ↔ (x + z - 1) / z ≤ y := by
