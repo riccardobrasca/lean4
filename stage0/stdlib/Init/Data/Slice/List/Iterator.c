@@ -17,9 +17,6 @@ lean_object* lean_nat_add(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* l_ListSlice_instToIterator___lam__0(lean_object*);
 static const lean_closure_object l_ListSlice_instToIterator___closed__0_value = {.m_header = {.m_rc = 0, .m_cs_sz = sizeof(lean_closure_object) + sizeof(void*)*0, .m_other = 0, .m_tag = 245}, .m_fun = (void*)l_ListSlice_instToIterator___lam__0, .m_arity = 1, .m_num_fixed = 0, .m_objs = {} };
 static const lean_object* l_ListSlice_instToIterator___closed__0 = (const lean_object*)&l_ListSlice_instToIterator___closed__0_value;
-lean_object* l_Std_ToIterator_of___redArg___lam__0(lean_object*, lean_object*);
-static const lean_closure_object l_ListSlice_instToIterator___closed__1_value = {.m_header = {.m_rc = 0, .m_cs_sz = sizeof(lean_closure_object) + sizeof(void*)*1, .m_other = 0, .m_tag = 245}, .m_fun = (void*)l_Std_ToIterator_of___redArg___lam__0, .m_arity = 2, .m_num_fixed = 1, .m_objs = {((lean_object*)&l_ListSlice_instToIterator___closed__0_value)} };
-static const lean_object* l_ListSlice_instToIterator___closed__1 = (const lean_object*)&l_ListSlice_instToIterator___closed__1_value;
 LEAN_EXPORT lean_object* l_ListSlice_instToIterator(lean_object*);
 uint8_t lean_nat_dec_eq(lean_object*, lean_object*);
 lean_object* lean_nat_sub(lean_object*, lean_object*);
@@ -151,7 +148,7 @@ LEAN_EXPORT lean_object* l_ListSlice_instToIterator(lean_object* x_1) {
 _start:
 {
 lean_object* x_2; 
-x_2 = ((lean_object*)(l_ListSlice_instToIterator___closed__1));
+x_2 = ((lean_object*)(l_ListSlice_instToIterator___closed__0));
 return x_2;
 }
 }
@@ -808,9 +805,9 @@ goto block_37;
 block_14:
 {
 lean_object* x_9; lean_object* x_10; lean_object* x_11; lean_object* x_12; lean_object* x_13; 
-x_9 = l___private_Init_WFExtrinsicFix_0__WellFounded_opaqueFix_u2082___redArg(x_1, x_8, x_6);
+x_9 = l___private_Init_WFExtrinsicFix_0__WellFounded_opaqueFix_u2082___redArg(x_1, x_8, x_7);
 x_10 = lean_array_to_list(x_9);
-x_11 = l_List_appendTR___redArg(x_7, x_10);
+x_11 = l_List_appendTR___redArg(x_6, x_10);
 x_12 = l_List_lengthTR___redArg(x_11);
 x_13 = l_List_toSlice___redArg(x_11, x_5, x_12);
 lean_dec(x_12);
@@ -835,8 +832,8 @@ if (lean_obj_tag(x_18) == 0)
 lean_ctor_set(x_4, 1, x_17);
 lean_ctor_set(x_4, 0, x_19);
 x_5 = x_19;
-x_6 = x_20;
-x_7 = x_22;
+x_6 = x_22;
+x_7 = x_20;
 x_8 = x_4;
 goto block_14;
 }
@@ -852,8 +849,8 @@ lean_dec(x_23);
 lean_ctor_set(x_4, 1, x_17);
 lean_ctor_set(x_4, 0, x_25);
 x_5 = x_19;
-x_6 = x_20;
-x_7 = x_22;
+x_6 = x_22;
+x_7 = x_20;
 x_8 = x_4;
 goto block_14;
 }
@@ -877,8 +874,8 @@ x_32 = lean_alloc_ctor(0, 2, 0);
 lean_ctor_set(x_32, 0, x_28);
 lean_ctor_set(x_32, 1, x_26);
 x_5 = x_28;
-x_6 = x_29;
-x_7 = x_31;
+x_6 = x_31;
+x_7 = x_29;
 x_8 = x_32;
 goto block_14;
 }
@@ -895,8 +892,8 @@ x_36 = lean_alloc_ctor(0, 2, 0);
 lean_ctor_set(x_36, 0, x_35);
 lean_ctor_set(x_36, 1, x_26);
 x_5 = x_28;
-x_6 = x_29;
-x_7 = x_31;
+x_6 = x_31;
+x_7 = x_29;
 x_8 = x_36;
 goto block_14;
 }

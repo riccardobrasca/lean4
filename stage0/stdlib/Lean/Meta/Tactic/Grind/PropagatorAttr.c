@@ -1646,8 +1646,8 @@ x_12 = l_List_isEmpty___redArg(x_11);
 if (x_12 == 0)
 {
 lean_object* x_13; 
-lean_dec(x_8);
 lean_dec_ref(x_1);
+lean_dec(x_8);
 lean_dec(x_6);
 lean_dec_ref(x_5);
 lean_dec(x_4);

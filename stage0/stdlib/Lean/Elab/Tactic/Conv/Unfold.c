@@ -748,8 +748,8 @@ goto block_45;
 else
 {
 uint8_t x_71; 
-lean_dec_ref(x_39);
 lean_dec(x_58);
+lean_dec_ref(x_39);
 lean_dec_ref(x_37);
 lean_dec(x_12);
 lean_dec(x_10);

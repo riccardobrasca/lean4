@@ -2558,8 +2558,8 @@ return x_13;
 }
 else
 {
-lean_dec_ref(x_15);
 lean_dec(x_27);
+lean_dec_ref(x_15);
 lean_free_object(x_13);
 x_16 = x_3;
 x_17 = x_4;
@@ -2658,8 +2658,8 @@ return x_62;
 }
 else
 {
-lean_dec_ref(x_42);
 lean_dec(x_54);
+lean_dec_ref(x_42);
 x_43 = x_3;
 x_44 = x_4;
 x_45 = x_5;

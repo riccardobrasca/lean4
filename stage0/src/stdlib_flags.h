@@ -1,7 +1,5 @@
 #include "util/options.h"
 
-// Dear CI, please build stage 2 first
-
 namespace lean {
 options get_default_options() {
     options opts;

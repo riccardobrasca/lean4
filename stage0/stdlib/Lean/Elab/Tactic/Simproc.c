@@ -1840,8 +1840,8 @@ goto block_19;
 }
 else
 {
-lean_dec_ref(x_21);
 lean_dec(x_22);
+lean_dec_ref(x_21);
 lean_free_object(x_5);
 x_8 = x_2;
 x_9 = x_3;
@@ -2054,8 +2054,8 @@ goto block_55;
 }
 else
 {
-lean_dec_ref(x_57);
 lean_dec(x_58);
+lean_dec_ref(x_57);
 x_44 = x_2;
 x_45 = x_3;
 goto block_55;

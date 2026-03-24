@@ -3222,8 +3222,8 @@ x_16 = l_List_isEmpty___redArg(x_15);
 if (x_16 == 0)
 {
 lean_object* x_17; 
-lean_dec_ref(x_1);
 lean_dec(x_12);
+lean_dec_ref(x_1);
 lean_dec(x_10);
 lean_dec_ref(x_9);
 lean_dec(x_8);

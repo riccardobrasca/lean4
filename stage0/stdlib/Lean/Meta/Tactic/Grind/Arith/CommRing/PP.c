@@ -958,32 +958,34 @@ uint8_t x_4;
 x_4 = l_Array_isEmpty___redArg(x_3);
 if (x_4 == 0)
 {
-uint8_t x_5; double x_6; lean_object* x_7; lean_object* x_8; lean_object* x_9; lean_object* x_10; lean_object* x_11; 
+uint8_t x_5; lean_object* x_6; double x_7; lean_object* x_8; lean_object* x_9; lean_object* x_10; lean_object* x_11; lean_object* x_12; 
 x_5 = 1;
-x_6 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
-x_7 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
-x_8 = lean_alloc_ctor(0, 2, 17);
-lean_ctor_set(x_8, 0, x_1);
-lean_ctor_set(x_8, 1, x_7);
-lean_ctor_set_float(x_8, sizeof(void*)*2, x_6);
-lean_ctor_set_float(x_8, sizeof(void*)*2 + 8, x_6);
-lean_ctor_set_uint8(x_8, sizeof(void*)*2 + 16, x_5);
-x_9 = lean_thunk_get_own(x_2);
-x_10 = lean_alloc_ctor(9, 3, 0);
-lean_ctor_set(x_10, 0, x_8);
-lean_ctor_set(x_10, 1, x_9);
-lean_ctor_set(x_10, 2, x_3);
-x_11 = lean_alloc_ctor(1, 1, 0);
-lean_ctor_set(x_11, 0, x_10);
-return x_11;
+x_6 = lean_box(0);
+x_7 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
+x_8 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
+x_9 = lean_alloc_ctor(0, 3, 17);
+lean_ctor_set(x_9, 0, x_1);
+lean_ctor_set(x_9, 1, x_6);
+lean_ctor_set(x_9, 2, x_8);
+lean_ctor_set_float(x_9, sizeof(void*)*3, x_7);
+lean_ctor_set_float(x_9, sizeof(void*)*3 + 8, x_7);
+lean_ctor_set_uint8(x_9, sizeof(void*)*3 + 16, x_5);
+x_10 = lean_thunk_get_own(x_2);
+x_11 = lean_alloc_ctor(9, 3, 0);
+lean_ctor_set(x_11, 0, x_9);
+lean_ctor_set(x_11, 1, x_10);
+lean_ctor_set(x_11, 2, x_3);
+x_12 = lean_alloc_ctor(1, 1, 0);
+lean_ctor_set(x_12, 0, x_11);
+return x_12;
 }
 else
 {
-lean_object* x_12; 
+lean_object* x_13; 
 lean_dec_ref(x_3);
 lean_dec(x_1);
-x_12 = lean_box(0);
-return x_12;
+x_13 = lean_box(0);
+return x_13;
 }
 }
 }
@@ -1027,23 +1029,25 @@ return x_2;
 LEAN_EXPORT lean_object* l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1(lean_object* x_1, lean_object* x_2) {
 _start:
 {
-double x_3; uint8_t x_4; lean_object* x_5; lean_object* x_6; lean_object* x_7; lean_object* x_8; lean_object* x_9; 
-x_3 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
-x_4 = 1;
-x_5 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
-x_6 = lean_alloc_ctor(0, 2, 17);
-lean_ctor_set(x_6, 0, x_2);
-lean_ctor_set(x_6, 1, x_5);
-lean_ctor_set_float(x_6, sizeof(void*)*2, x_3);
-lean_ctor_set_float(x_6, sizeof(void*)*2 + 8, x_3);
-lean_ctor_set_uint8(x_6, sizeof(void*)*2 + 16, x_4);
-x_7 = l_Lean_MessageData_ofExpr(x_1);
-x_8 = lean_obj_once(&l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0, &l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0_once, _init_l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0);
-x_9 = lean_alloc_ctor(9, 3, 0);
-lean_ctor_set(x_9, 0, x_6);
-lean_ctor_set(x_9, 1, x_7);
-lean_ctor_set(x_9, 2, x_8);
-return x_9;
+lean_object* x_3; double x_4; uint8_t x_5; lean_object* x_6; lean_object* x_7; lean_object* x_8; lean_object* x_9; lean_object* x_10; 
+x_3 = lean_box(0);
+x_4 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
+x_5 = 1;
+x_6 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
+x_7 = lean_alloc_ctor(0, 3, 17);
+lean_ctor_set(x_7, 0, x_2);
+lean_ctor_set(x_7, 1, x_3);
+lean_ctor_set(x_7, 2, x_6);
+lean_ctor_set_float(x_7, sizeof(void*)*3, x_4);
+lean_ctor_set_float(x_7, sizeof(void*)*3 + 8, x_4);
+lean_ctor_set_uint8(x_7, sizeof(void*)*3 + 16, x_5);
+x_8 = l_Lean_MessageData_ofExpr(x_1);
+x_9 = lean_obj_once(&l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0, &l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0_once, _init_l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0);
+x_10 = lean_alloc_ctor(9, 3, 0);
+lean_ctor_set(x_10, 0, x_7);
+lean_ctor_set(x_10, 1, x_8);
+lean_ctor_set(x_10, 2, x_9);
+return x_10;
 }
 }
 static lean_object* _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f___lam__0___closed__2(void) {
@@ -8391,18 +8395,20 @@ return x_12;
 static lean_object* _init_l_Lean_Meta_Grind_Arith_CommRing_pp_x3f___closed__0(void) {
 _start:
 {
-lean_object* x_1; uint8_t x_2; double x_3; lean_object* x_4; lean_object* x_5; 
+lean_object* x_1; uint8_t x_2; double x_3; lean_object* x_4; lean_object* x_5; lean_object* x_6; 
 x_1 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
 x_2 = 1;
 x_3 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
-x_4 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppRing_x3f___closed__1));
-x_5 = lean_alloc_ctor(0, 2, 17);
-lean_ctor_set(x_5, 0, x_4);
-lean_ctor_set(x_5, 1, x_1);
-lean_ctor_set_float(x_5, sizeof(void*)*2, x_3);
-lean_ctor_set_float(x_5, sizeof(void*)*2 + 8, x_3);
-lean_ctor_set_uint8(x_5, sizeof(void*)*2 + 16, x_2);
-return x_5;
+x_4 = lean_box(0);
+x_5 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppRing_x3f___closed__1));
+x_6 = lean_alloc_ctor(0, 3, 17);
+lean_ctor_set(x_6, 0, x_5);
+lean_ctor_set(x_6, 1, x_4);
+lean_ctor_set(x_6, 2, x_1);
+lean_ctor_set_float(x_6, sizeof(void*)*3, x_3);
+lean_ctor_set_float(x_6, sizeof(void*)*3 + 8, x_3);
+lean_ctor_set_uint8(x_6, sizeof(void*)*3 + 16, x_2);
+return x_6;
 }
 }
 static lean_object* _init_l_Lean_Meta_Grind_Arith_CommRing_pp_x3f___closed__3(void) {
@@ -8659,115 +8665,119 @@ return x_6;
 }
 else
 {
-lean_object* x_12; double x_13; lean_object* x_14; lean_object* x_15; lean_object* x_16; lean_object* x_17; lean_object* x_18; lean_object* x_19; lean_object* x_20; lean_object* x_21; lean_object* x_22; lean_object* x_23; lean_object* x_24; lean_object* x_25; 
+lean_object* x_12; lean_object* x_13; double x_14; lean_object* x_15; lean_object* x_16; lean_object* x_17; lean_object* x_18; lean_object* x_19; lean_object* x_20; lean_object* x_21; lean_object* x_22; lean_object* x_23; lean_object* x_24; lean_object* x_25; lean_object* x_26; 
 x_12 = ((lean_object*)(l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__1));
-x_13 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
-x_14 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
-x_15 = lean_alloc_ctor(0, 2, 17);
-lean_ctor_set(x_15, 0, x_12);
-lean_ctor_set(x_15, 1, x_14);
-lean_ctor_set_float(x_15, sizeof(void*)*2, x_13);
-lean_ctor_set_float(x_15, sizeof(void*)*2 + 8, x_13);
-lean_ctor_set_uint8(x_15, sizeof(void*)*2 + 16, x_11);
-x_16 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3);
-x_17 = l_Nat_reprFast(x_9);
-x_18 = lean_alloc_ctor(3, 1, 0);
-lean_ctor_set(x_18, 0, x_17);
-x_19 = l_Lean_MessageData_ofFormat(x_18);
-x_20 = lean_alloc_ctor(7, 2, 0);
-lean_ctor_set(x_20, 0, x_16);
-lean_ctor_set(x_20, 1, x_19);
-x_21 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5);
-x_22 = lean_alloc_ctor(7, 2, 0);
-lean_ctor_set(x_22, 0, x_20);
-lean_ctor_set(x_22, 1, x_21);
-x_23 = lean_obj_once(&l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0, &l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0_once, _init_l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0);
-x_24 = lean_alloc_ctor(9, 3, 0);
-lean_ctor_set(x_24, 0, x_15);
-lean_ctor_set(x_24, 1, x_22);
-lean_ctor_set(x_24, 2, x_23);
-x_25 = lean_array_push(x_3, x_24);
-lean_ctor_set(x_6, 0, x_25);
+x_13 = lean_box(0);
+x_14 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
+x_15 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
+x_16 = lean_alloc_ctor(0, 3, 17);
+lean_ctor_set(x_16, 0, x_12);
+lean_ctor_set(x_16, 1, x_13);
+lean_ctor_set(x_16, 2, x_15);
+lean_ctor_set_float(x_16, sizeof(void*)*3, x_14);
+lean_ctor_set_float(x_16, sizeof(void*)*3 + 8, x_14);
+lean_ctor_set_uint8(x_16, sizeof(void*)*3 + 16, x_11);
+x_17 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3);
+x_18 = l_Nat_reprFast(x_9);
+x_19 = lean_alloc_ctor(3, 1, 0);
+lean_ctor_set(x_19, 0, x_18);
+x_20 = l_Lean_MessageData_ofFormat(x_19);
+x_21 = lean_alloc_ctor(7, 2, 0);
+lean_ctor_set(x_21, 0, x_17);
+lean_ctor_set(x_21, 1, x_20);
+x_22 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5);
+x_23 = lean_alloc_ctor(7, 2, 0);
+lean_ctor_set(x_23, 0, x_21);
+lean_ctor_set(x_23, 1, x_22);
+x_24 = lean_obj_once(&l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0, &l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0_once, _init_l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0);
+x_25 = lean_alloc_ctor(9, 3, 0);
+lean_ctor_set(x_25, 0, x_16);
+lean_ctor_set(x_25, 1, x_23);
+lean_ctor_set(x_25, 2, x_24);
+x_26 = lean_array_push(x_3, x_25);
+lean_ctor_set(x_6, 0, x_26);
 return x_6;
 }
 }
 else
 {
-lean_object* x_26; lean_object* x_27; lean_object* x_28; uint8_t x_29; 
-x_26 = lean_ctor_get(x_6, 0);
-lean_inc(x_26);
-lean_dec(x_6);
-x_27 = lean_ctor_get(x_2, 5);
+lean_object* x_27; lean_object* x_28; lean_object* x_29; uint8_t x_30; 
+x_27 = lean_ctor_get(x_6, 0);
 lean_inc(x_27);
-lean_dec_ref(x_2);
-x_28 = lean_ctor_get(x_26, 12);
+lean_dec(x_6);
+x_28 = lean_ctor_get(x_2, 5);
 lean_inc(x_28);
-lean_dec(x_26);
-x_29 = lean_nat_dec_le(x_27, x_28);
-lean_dec(x_28);
-if (x_29 == 0)
-{
-lean_object* x_30; 
+lean_dec_ref(x_2);
+x_29 = lean_ctor_get(x_27, 12);
+lean_inc(x_29);
 lean_dec(x_27);
-x_30 = lean_alloc_ctor(0, 1, 0);
-lean_ctor_set(x_30, 0, x_3);
-return x_30;
+x_30 = lean_nat_dec_le(x_28, x_29);
+lean_dec(x_29);
+if (x_30 == 0)
+{
+lean_object* x_31; 
+lean_dec(x_28);
+x_31 = lean_alloc_ctor(0, 1, 0);
+lean_ctor_set(x_31, 0, x_3);
+return x_31;
 }
 else
 {
-lean_object* x_31; double x_32; lean_object* x_33; lean_object* x_34; lean_object* x_35; lean_object* x_36; lean_object* x_37; lean_object* x_38; lean_object* x_39; lean_object* x_40; lean_object* x_41; lean_object* x_42; lean_object* x_43; lean_object* x_44; lean_object* x_45; 
-x_31 = ((lean_object*)(l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__1));
-x_32 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
-x_33 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
-x_34 = lean_alloc_ctor(0, 2, 17);
-lean_ctor_set(x_34, 0, x_31);
-lean_ctor_set(x_34, 1, x_33);
-lean_ctor_set_float(x_34, sizeof(void*)*2, x_32);
-lean_ctor_set_float(x_34, sizeof(void*)*2 + 8, x_32);
-lean_ctor_set_uint8(x_34, sizeof(void*)*2 + 16, x_29);
-x_35 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3);
-x_36 = l_Nat_reprFast(x_27);
-x_37 = lean_alloc_ctor(3, 1, 0);
-lean_ctor_set(x_37, 0, x_36);
-x_38 = l_Lean_MessageData_ofFormat(x_37);
-x_39 = lean_alloc_ctor(7, 2, 0);
-lean_ctor_set(x_39, 0, x_35);
-lean_ctor_set(x_39, 1, x_38);
-x_40 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5);
+lean_object* x_32; lean_object* x_33; double x_34; lean_object* x_35; lean_object* x_36; lean_object* x_37; lean_object* x_38; lean_object* x_39; lean_object* x_40; lean_object* x_41; lean_object* x_42; lean_object* x_43; lean_object* x_44; lean_object* x_45; lean_object* x_46; lean_object* x_47; 
+x_32 = ((lean_object*)(l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__1));
+x_33 = lean_box(0);
+x_34 = lean_float_once(&l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0, &l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0_once, _init_l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__0);
+x_35 = ((lean_object*)(l___private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_toOption___closed__1));
+x_36 = lean_alloc_ctor(0, 3, 17);
+lean_ctor_set(x_36, 0, x_32);
+lean_ctor_set(x_36, 1, x_33);
+lean_ctor_set(x_36, 2, x_35);
+lean_ctor_set_float(x_36, sizeof(void*)*3, x_34);
+lean_ctor_set_float(x_36, sizeof(void*)*3 + 8, x_34);
+lean_ctor_set_uint8(x_36, sizeof(void*)*3 + 16, x_30);
+x_37 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__3);
+x_38 = l_Nat_reprFast(x_28);
+x_39 = lean_alloc_ctor(3, 1, 0);
+lean_ctor_set(x_39, 0, x_38);
+x_40 = l_Lean_MessageData_ofFormat(x_39);
 x_41 = lean_alloc_ctor(7, 2, 0);
-lean_ctor_set(x_41, 0, x_39);
+lean_ctor_set(x_41, 0, x_37);
 lean_ctor_set(x_41, 1, x_40);
-x_42 = lean_obj_once(&l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0, &l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0_once, _init_l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0);
-x_43 = lean_alloc_ctor(9, 3, 0);
-lean_ctor_set(x_43, 0, x_34);
-lean_ctor_set(x_43, 1, x_41);
-lean_ctor_set(x_43, 2, x_42);
-x_44 = lean_array_push(x_3, x_43);
-x_45 = lean_alloc_ctor(0, 1, 0);
-lean_ctor_set(x_45, 0, x_44);
-return x_45;
+x_42 = lean_obj_once(&l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5, &l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5_once, _init_l_Lean_Meta_Grind_Arith_CommRing_addThresholdMessage___closed__5);
+x_43 = lean_alloc_ctor(7, 2, 0);
+lean_ctor_set(x_43, 0, x_41);
+lean_ctor_set(x_43, 1, x_42);
+x_44 = lean_obj_once(&l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0, &l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0_once, _init_l_Lean_toTraceElem___at___00__private_Lean_Meta_Tactic_Grind_Arith_CommRing_PP_0__Lean_Meta_Grind_Arith_CommRing_ppBasis_x3f_spec__1___closed__0);
+x_45 = lean_alloc_ctor(9, 3, 0);
+lean_ctor_set(x_45, 0, x_36);
+lean_ctor_set(x_45, 1, x_43);
+lean_ctor_set(x_45, 2, x_44);
+x_46 = lean_array_push(x_3, x_45);
+x_47 = lean_alloc_ctor(0, 1, 0);
+lean_ctor_set(x_47, 0, x_46);
+return x_47;
 }
 }
 }
 else
 {
-uint8_t x_46; 
+uint8_t x_48; 
 lean_dec_ref(x_3);
 lean_dec_ref(x_2);
-x_46 = !lean_is_exclusive(x_6);
-if (x_46 == 0)
+x_48 = !lean_is_exclusive(x_6);
+if (x_48 == 0)
 {
 return x_6;
 }
 else
 {
-lean_object* x_47; lean_object* x_48; 
-x_47 = lean_ctor_get(x_6, 0);
-lean_inc(x_47);
+lean_object* x_49; lean_object* x_50; 
+x_49 = lean_ctor_get(x_6, 0);
+lean_inc(x_49);
 lean_dec(x_6);
-x_48 = lean_alloc_ctor(1, 1, 0);
-lean_ctor_set(x_48, 0, x_47);
-return x_48;
+x_50 = lean_alloc_ctor(1, 1, 0);
+lean_ctor_set(x_50, 0, x_49);
+return x_50;
 }
 }
 }

@@ -3847,8 +3847,8 @@ x_10 = l_List_isEmpty___redArg(x_9);
 if (x_10 == 0)
 {
 lean_object* x_11; 
-lean_dec(x_6);
 lean_dec_ref(x_1);
+lean_dec(x_6);
 lean_dec(x_4);
 lean_dec_ref(x_3);
 lean_dec_ref(x_2);
@@ -3925,8 +3925,8 @@ return x_30;
 else
 {
 uint8_t x_31; 
-lean_dec(x_6);
 lean_dec_ref(x_1);
+lean_dec(x_6);
 lean_dec(x_4);
 lean_dec_ref(x_3);
 lean_dec_ref(x_2);
