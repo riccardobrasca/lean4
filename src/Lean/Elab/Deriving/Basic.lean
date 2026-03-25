@@ -221,7 +221,7 @@ def processDefDeriving (view : DerivingClassView) (decl : Expr) (isNoncomputable
             instName ← liftMacroM <| mkUnusedBaseName instName
             if isPrivateName declName then
               instName := mkPrivateName env instName
-            let isMeta := (← read).isMetaSection
+            let isMeta := (← read).declName?.any (isMarkedMeta (← getEnv))
             let inst ← if backward.inferInstanceAs.wrap.get (← getOptions) then
               withDeclNameForAuxNaming instName <| withNewMCtxDepth <|
                 normalizeInstance result.instVal result.instType
