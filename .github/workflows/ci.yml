@@ -60,12 +60,6 @@ jobs:
           if [[ -n '${{ secrets.PUSH_NIGHTLY_TOKEN }}' ]]; then
             git remote add nightly https://foo:'${{ secrets.PUSH_NIGHTLY_TOKEN }}'@github.com/${{ github.repository_owner }}/lean4-nightly.git
             git fetch nightly --tags
-<<<<<<< HEAD
-            LEAN_VERSION_STRING="nightly-$(date -u +%F)"
-            # do nothing if commit already has a different tag
-            if [[ "$(git name-rev --name-only --tags --no-undefined HEAD 2> /dev/null || echo "$LEAN_VERSION_STRING")" == "$LEAN_VERSION_STRING" ]]; then
-              echo "nightly=$LEAN_VERSION_STRING" >> "$GITHUB_OUTPUT"
-=======
             if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
               # Manual re-release: retry today's nightly, or create a revision if it already exists
               TODAY_NIGHTLY="nightly-$(date -u +%F)"
@@ -98,7 +92,6 @@ jobs:
               else
                 echo "nightly=$LEAN_VERSION_STRING" >> "$GITHUB_OUTPUT"
               fi
->>>>>>> v4.30.0-rc1
             fi
           fi
 
@@ -185,34 +178,6 @@ jobs:
 
           echo "Version validation passed: $TAG_MAJOR.$TAG_MINOR.$TAG_PATCH"
 
-          # Also check stage0/src/CMakeLists.txt — the stage0 compiler stamps .olean
-          # headers with its baked-in version, so a mismatch produces .olean files
-          # with the wrong version in the release tarball.
-          STAGE0_MAJOR=$(grep -E "^set\(LEAN_VERSION_MAJOR " stage0/src/CMakeLists.txt | grep -oE '[0-9]+')
-          STAGE0_MINOR=$(grep -E "^set\(LEAN_VERSION_MINOR " stage0/src/CMakeLists.txt | grep -oE '[0-9]+')
-
-          STAGE0_ERRORS=""
-          if [[ "$STAGE0_MAJOR" != "$TAG_MAJOR" ]]; then
-            STAGE0_ERRORS+="LEAN_VERSION_MAJOR: expected $TAG_MAJOR, found $STAGE0_MAJOR\n"
-          fi
-          if [[ "$STAGE0_MINOR" != "$TAG_MINOR" ]]; then
-            STAGE0_ERRORS+="LEAN_VERSION_MINOR: expected $TAG_MINOR, found $STAGE0_MINOR\n"
-          fi
-
-          if [[ -n "$STAGE0_ERRORS" ]]; then
-            echo "::error::Version mismatch between tag and stage0/src/CMakeLists.txt"
-            echo ""
-            echo "Tag ${{ steps.set-release.outputs.RELEASE_TAG }} expects version $TAG_MAJOR.$TAG_MINOR.$TAG_PATCH"
-            echo "But stage0/src/CMakeLists.txt has mismatched values:"
-            echo -e "$STAGE0_ERRORS"
-            echo ""
-            echo "The stage0 compiler stamps .olean headers with its baked-in version."
-            echo "Run 'make update-stage0' to rebuild stage0 with the correct version, then re-tag."
-            exit 1
-          fi
-
-          echo "stage0 version validation passed: $STAGE0_MAJOR.$STAGE0_MINOR"
-
       # 0: PRs without special label
       # 1: PRs with `merge-ci` label, merge queue checks, master commits
       # 2: nightlies
@@ -261,9 +226,6 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-<<<<<<< HEAD
-            // Only run the Linux release build
-=======
             const level = ${{ steps.set-level.outputs.check-level }};
             const fast = ${{ steps.set-level.outputs.fast }};
             const lakeCi = "${{ steps.set-level.outputs.lake-ci }}" == "true";
@@ -272,22 +234,18 @@ jobs:
             let large = ${{ github.repository == 'leanprover/lean4' }};
             const isPr = "${{ github.event_name }}" == "pull_request";
             const isPushToMaster = "${{ github.event_name }}" == "push" && "${{ github.ref_name }}" == "master";
->>>>>>> v4.30.0-rc1
             let matrix = [
+              /* TODO: to be updated to new LLVM
               {
-                "name": "Linux release",
+                "name": "Linux LLVM",
                 "os": "ubuntu-latest",
-                "release": true,
-                "enabled": true,
+                "release": false,
+                "enabled": level >= 2,
                 "test": true,
                 "shell": "nix develop .#oldGlibc -c bash -euxo pipefail {0}",
                 "llvm-url": "https://github.com/leanprover/lean-llvm/releases/download/19.1.2/lean-llvm-x86_64-linux-gnu.tar.zst",
                 "prepare-llvm": "../script/prepare-llvm-linux.sh lean-llvm*",
                 "binary-check": "ldd -v",
-<<<<<<< HEAD
-                "CTEST_OPTIONS": "-E 'foreign'",
-              },
-=======
                 // foreign code may be linked against more recent glibc
                 // reverse-ffi needs to be updated to link to LLVM libraries
                 "CTEST_OPTIONS": "-E 'foreign|leanlaketest_reverse-ffi'",
@@ -449,10 +407,10 @@ jobs:
               //   // Just a few selected tests because wasm is slow
               //   "CTEST_OPTIONS": "-R \"leantest_1007\\.lean|leantest_Format\\.lean|leanruntest\\_1037.lean|leanruntest_ac_rfl\\.lean|leanruntest_tempfile.lean\\.|leanruntest_libuv\\.lean\""
               // }
->>>>>>> v4.30.0-rc1
             ];
             for (const job of matrix) {
               if (job["prepare-llvm"]) {
+                // `USE_LAKE` is not compatible with `prepare-llvm` currently
                 job["CMAKE_OPTIONS"] = (job["CMAKE_OPTIONS"] ? job["CMAKE_OPTIONS"] + " " : "") + "-DUSE_LAKE=OFF";
               }
             }
@@ -462,8 +420,9 @@ jobs:
               }
             }
             console.log(`matrix:\n${JSON.stringify(matrix, null, 2)}`);
-            core.setOutput('matrix', matrix);
-            core.setOutput('matrix-secondary', []);
+            matrix = matrix.filter((job) => job["enabled"]);
+            core.setOutput('matrix', matrix.filter((job) => !job["secondary"]));
+            core.setOutput('matrix-secondary', matrix.filter((job) => job["secondary"]));
 
   build:
     if: github.event_name != 'schedule' || github.repository == 'leanprover/lean4'
@@ -529,18 +488,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           path: artifacts
-          merge-multiple: true
       - name: Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         with:
-          files: artifacts/*
+          files: artifacts/*/*
           fail_on_unmatched_files: true
           prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') || contains(github.ref, '-rc') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update release.lean-lang.org
+        run: |
+          gh workflow -R leanprover/release-index run update-index.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_INDEX_TOKEN }}
 
   # This job creates nightly releases during the cron job.
   # It is responsible for creating the tag, and automatically generating a changelog.
@@ -557,7 +520,7 @@ jobs:
           # Doesn't seem to be working when additionally fetching from lean4-nightly
           #filter: tree:0
           token: ${{ secrets.PUSH_NIGHTLY_TOKEN }}
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           path: artifacts
       - name: Prepare Nightly Release
@@ -567,7 +530,7 @@ jobs:
           git tag "${{ needs.configure.outputs.nightly }}"
           git push nightly "${{ needs.configure.outputs.nightly }}"
           git push -f origin refs/tags/${{ needs.configure.outputs.nightly }}:refs/heads/nightly
-          last_tag="$(git log HEAD^ --simplify-by-decoration --pretty="format:%d" | grep -o "nightly-[-0-9]*" | head -n 1)"
+          last_tag="$(git log HEAD^ --simplify-by-decoration --pretty="format:%d" | grep -o "nightly-[^ ,)]*" | head -n 1)"
           echo -e "*Changes since ${last_tag}:*\n\n" > diff.md
           git show "$last_tag":RELEASES.md > old.md
           #./script/diff_changelogs.py old.md doc/changes.md >> diff.md
@@ -590,8 +553,18 @@ jobs:
           gh workflow -R leanprover/release-index run update-index.yml
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_INDEX_TOKEN }}
+      - name: Generate mathlib nightly-testing app token
+        id: mathlib-app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        continue-on-error: true
+        with:
+          app-id: ${{ secrets.MATHLIB_NIGHTLY_TESTING_APP_ID }}
+          private-key: ${{ secrets.MATHLIB_NIGHTLY_TESTING_PRIVATE_KEY }}
+          owner: leanprover-community
+          repositories: mathlib4-nightly-testing
       - name: Update toolchain on mathlib4's nightly-testing branch
+        if: steps.mathlib-app-token.outcome == 'success'
         run: |
-          gh workflow -R leanprover-community/mathlib4-nightly-testing run nightly_bump_toolchain.yml
+          gh workflow -R leanprover-community/mathlib4-nightly-testing run nightly_bump_and_merge.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.MATHLIB4_BOT }}
+          GITHUB_TOKEN: ${{ steps.mathlib-app-token.outputs.token }}
