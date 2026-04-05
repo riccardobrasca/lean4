@@ -31,7 +31,13 @@ Author: Leonardo de Moura
 #if LEAN_SUPPORTS_BACKTRACE
 #include <execinfo.h>
 #include <unistd.h>
-#include "runtime/demangle.h"
+// Lean-exported demangler from Lean.Compiler.NameDemangling.
+// Declared as a weak symbol so leanrt doesn't require libLean at link time.
+// When the Lean demangler is linked in, it overrides this stub.
+extern "C" __attribute__((weak)) lean_obj_res lean_demangle_bt_line_cstr(lean_obj_arg s) {
+    lean_dec(s);
+    return lean_mk_string("");
+}
 #endif
 
 // HACK: for unknown reasons, std::isnan(x) fails on msys64 because math.h
@@ -137,13 +143,18 @@ static void print_backtrace(bool force_stderr) {
     if (char ** symbols = backtrace_symbols(bt_buf, nptrs)) {
         bool raw = getenv("LEAN_BACKTRACE_RAW");
         for (int i = 0; i < nptrs; i++) {
-            char * demangled = raw ? nullptr : lean_demangle_bt_line(symbols[i]);
-            if (demangled) {
-                panic_eprintln(demangled, force_stderr);
-                free(demangled);
-            } else {
-                panic_eprintln(symbols[i], force_stderr);
+            if (!raw) {
+                lean_object * line_obj = lean_mk_string(symbols[i]);
+                lean_object * result = lean_demangle_bt_line_cstr(line_obj);
+                char const * result_str = lean_string_cstr(result);
+                if (result_str[0] != '\0') {
+                    panic_eprintln(result_str, force_stderr);
+                    lean_dec(result);
+                    continue;
+                }
+                lean_dec(result);
             }
+            panic_eprintln(symbols[i], force_stderr);
         }
         // According to `man backtrace`, each `symbols[i]` should NOT be freed
         free(symbols);
@@ -183,6 +194,11 @@ extern "C" LEAN_EXPORT object * lean_panic_fn(object * default_val, object * msg
     lean_panic_impl(lean_string_cstr(msg), lean_string_size(msg) - 1);  // remove the null terminator
     lean_dec(msg);
     return default_val;
+}
+
+extern "C" LEAN_EXPORT object * lean_panic_fn_borrowed(b_obj_arg default_val, object * msg) {
+    lean_inc(default_val);
+    return lean_panic_fn(default_val, msg);
 }
 
 extern "C" LEAN_EXPORT object * lean_sorry(uint8) {
@@ -778,7 +794,7 @@ class task_manager {
                 // idle before picking up new work.
                 // But during shutdown, we skip this throttling:
                 // because the finalizer might have called m_queue_cv.notify_all() for the last
-                // time, we don't want to get stuck behind the wait(). 
+                // time, we don't want to get stuck behind the wait().
                 if (!m_shutting_down &&
                     m_std_workers.size() - m_idle_std_workers >= m_max_std_workers) {
                     m_queue_cv.wait(lock);

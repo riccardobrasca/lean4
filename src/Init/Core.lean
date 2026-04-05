@@ -172,6 +172,8 @@ instance thunkCoe : CoeTail α (Thunk α) where
   -- Since coercions are expanded eagerly, `a` is evaluated lazily.
   coe a := ⟨fun _ => a⟩
 
+instance [Inhabited α] : Inhabited (Thunk α) := ⟨.pure default⟩
+
 /-- A variation on `Eq.ndrec` with the equality argument first. -/
 abbrev Eq.ndrecOn.{u1, u2} {α : Sort u2} {a : α} {motive : α → Sort u1} {b : α} (h : a = b) (m : motive a) : motive b :=
   Eq.ndrec m h
@@ -1339,10 +1341,10 @@ transitive and contains `r`. `TransGen r a z` if and only if there exists a sequ
 -/
 inductive Relation.TransGen {α : Sort u} (r : α → α → Prop) : α → α → Prop
   /-- If `r a b`, then `TransGen r a b`. This is the base case of the transitive closure. -/
-  | single {a b} : r a b → TransGen r a b
+  | single {a b : α} : r a b → TransGen r a b
   /-- If `TransGen r a b` and `r b c`, then `TransGen r a c`.
   This is the inductive case of the transitive closure. -/
-  | tail {a b c} : TransGen r a b → r b c → TransGen r a c
+  | tail {a b c : α} : TransGen r a b → r b c → TransGen r a c
 
 /-- The transitive closure is transitive. -/
 theorem Relation.TransGen.trans {α : Sort u} {r : α → α → Prop} {a b c} :

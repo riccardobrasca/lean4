@@ -208,7 +208,11 @@ public instance LawfulOrderLT.of_lt {α : Type u} [LT α] [i : Asymm (α := α) 
     haveI := LE.ofLT α
     LawfulOrderLT α :=
   letI := LE.ofLT α
+<<<<<<< HEAD
   { lt_iff a b := by simp +instances [LE.le]; apply Asymm.asymm }
+=======
+  { lt_iff a b := by simp [LE.le]; apply Asymm.asymm }
+>>>>>>> v4.30.0-rc1
 
 /--
 If an `LT α` instance is asymmetric and its negation is transitive, then `LE.ofLT α` represents a
@@ -253,8 +257,12 @@ public theorem LawfulOrderInf.of_lt {α : Type u} [Min α] [LT α]
   letI := LE.ofLT α
   { le_min_iff a b c := by
       open Classical in
+<<<<<<< HEAD
       simp +instances only [LE.le]
       simp [← not_or, Decidable.not_iff_not]
+=======
+      simp only [LE.le, ← not_or, Decidable.not_iff_not]
+>>>>>>> v4.30.0-rc1
       simpa [Decidable.imp_iff_not_or] using min_lt_iff a b c }
 
 /--
@@ -283,8 +291,12 @@ public theorem LawfulOrderSup.of_lt {α : Type u} [Max α] [LT α]
   letI := LE.ofLT α
   { max_le_iff a b c := by
       open Classical in
+<<<<<<< HEAD
       simp +instances only [LE.le]
       simp [← not_or, Decidable.not_iff_not]
+=======
+      simp only [LE.le, ← not_or, Decidable.not_iff_not]
+>>>>>>> v4.30.0-rc1
       simpa [Decidable.imp_iff_not_or] using lt_max_iff a b c }
 
 /--

@@ -36,6 +36,7 @@ namespace Lean.Meta
 /-! # Smart unfolding support -/
 -- ===========================
 
+set_option compiler.ignoreBorrowAnnotation true in
 /--
 Forward declaration. It is defined in the module `src/Lean/Elab/PreDefinition/Structural/Eqns.lean`.
 It is possible to avoid this hack if we move `Structural.EqnInfo` and `Structural.eqnInfoExt`
@@ -169,7 +170,7 @@ def mkProjFn (ctorVal : ConstructorVal) (us : List Level) (params : Array Expr) 
     | some projFn => return mkApp (mkAppN (mkConst projFn us) params) major
 
 /--
-  If `major` is not a constructor application, and its type is a structure `C ...`, then return `C.mk major.1 ... major.n`
+  If `major` is not a constructor application, and its type is a non-recursive structure `C ...`, then return `C.mk major.1 ... major.n`
 
   \pre `inductName` is `C`.
 
@@ -178,7 +179,7 @@ private def toCtorWhenStructure (inductName : Name) (major : Expr) : MetaM Expr 
   unless (← useEtaStruct inductName) do
     return major
   let env ← getEnv
-  if !isStructureLike env inductName then
+  if !isNonRecStructure env inductName then
     return major
   else if let some _ ← isConstructorApp? major then
     return major
@@ -190,7 +191,7 @@ private def toCtorWhenStructure (inductName : Name) (major : Expr) : MetaM Expr 
       return major
     match majorType.getAppFn with
     | Expr.const d us =>
-      if (← whnfD (← inferType majorType)) == mkSort levelZero then
+      if (← whnfD (← inferType majorType)) == mkSort Level.zero then
         return major -- We do not perform eta for propositions, see implementation in the kernel
       else
         let some ctorName ← getFirstCtor d | pure major
@@ -1099,6 +1100,7 @@ private def cache (useCache : Bool) (e r : Expr) : MetaM Expr := do
     modify fun s => { s with cache.whnf := s.cache.whnf.insert key r }
   return r
 
+set_option compiler.ignoreBorrowAnnotation true in
 @[export lean_whnf]
 partial def whnfImp (e : Expr) : MetaM Expr :=
   withIncRecDepth <| whnfEasyCases e fun e => do

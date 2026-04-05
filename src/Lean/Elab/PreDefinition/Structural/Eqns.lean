@@ -148,9 +148,11 @@ where
             throwError "no progress at goal\n{MessageData.ofGoal mvarId}"
 
 public builtin_initialize eqnInfoExt : MapDeclarationExtension EqnInfo ←
-  mkMapDeclarationExtension (exportEntriesFn := fun env s _ =>
-    -- Do not export for non-exposed defs
-    s.filter (fun n _ => env.find? n |>.any (·.hasValue)) |>.toArray)
+  mkMapDeclarationExtension (exportEntriesFn := fun env s =>
+    let all := s.toArray
+    -- Do not export for non-exposed defs at exported/server levels
+    let exported := s.filter (fun n _ => (env.setExporting true).find? n |>.any (·.hasValue)) |>.toArray
+    { exported, server := exported, «private» := all })
 
 public def registerEqnsInfo (preDef : PreDefinition) (declNames : Array Name) (recArgPos : Nat)
     (fixedParamPerms : FixedParamPerms) : CoreM Unit := do
@@ -184,6 +186,7 @@ def getUnfoldFor? (declName : Name) : MetaM (Option Name) := do
   else
     return none
 
+set_option compiler.ignoreBorrowAnnotation true in
 @[export lean_get_structural_rec_arg_pos]
 def getStructuralRecArgPosImp? (declName : Name) : CoreM (Option Nat) := do
   let some info := eqnInfoExt.find? (← getEnv) declName | return none

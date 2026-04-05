@@ -148,6 +148,9 @@ end List
 
 namespace Array
 
+@[simp, grind =] theorem getElem!_toList [Inhabited α] {xs : Array α} {i : Nat} : xs.toList[i]! = xs[i]! := by
+  rw [List.getElem!_toArray]
+
 theorem size_eq_length_toList {xs : Array α} : xs.size = xs.toList.length := rfl
 
 /-! ### Externs -/
@@ -283,7 +286,7 @@ Examples:
  * `#[1, 2].isEmpty = false`
  * `#[()].isEmpty = false`
 -/
-@[expose]
+@[expose, inline]
 def isEmpty (xs : Array α) : Bool :=
   xs.size = 0
 
@@ -377,6 +380,7 @@ Returns the last element of an array, or panics if the array is empty.
 Safer alternatives include `Array.back`, which requires a proof the array is non-empty, and
 `Array.back?`, which returns an `Option`.
 -/
+@[inline]
 def back! [Inhabited α] (xs : Array α) : α :=
   xs[xs.size - 1]!
 
@@ -386,6 +390,7 @@ Returns the last element of an array, given a proof that the array is not empty.
 See `Array.back!` for the version that panics if the array is empty, or `Array.back?` for the
 version that returns an option.
 -/
+@[inline]
 def back (xs : Array α) (h : 0 < xs.size := by get_elem_tactic) : α :=
   xs[xs.size - 1]'(Nat.sub_one_lt_of_lt h)
 
@@ -395,6 +400,7 @@ Returns the last element of an array, or `none` if the array is empty.
 See `Array.back!` for the version that panics if the array is empty, or `Array.back` for the version
 that requires a proof the array is non-empty.
 -/
+@[inline]
 def back? (xs : Array α) : Option α :=
   xs[xs.size - 1]?
 
@@ -553,9 +559,9 @@ def modifyOp (xs : Array α) (idx : Nat) (f : α → α) : Array α :=
   xs.modify idx f
 
 /--
-  We claim this unsafe implementation is correct because an array cannot have more than `usizeSz` elements in our runtime.
+  We claim this unsafe implementation is correct because an array cannot have more than `USize.size` elements in our runtime.
 
-  This kind of low level trick can be removed with a little bit of compiler support. For example, if the compiler simplifies `as.size < usizeSz` to true. -/
+  This kind of low level trick can be removed with a little bit of compiler support. For example, if the compiler simplifies `as.size < USize.size` to true. -/
 @[inline] unsafe def forIn'Unsafe {α : Type u} {β : Type v} {m : Type v → Type w} [Monad m] (as : Array α) (b : β) (f : (a : α) → a ∈ as → β → m (ForInStep β)) : m β :=
   let sz := as.usize
   let rec @[specialize] loop (i : USize) (b : β) : m β := do
@@ -2144,8 +2150,5 @@ protected def repr {α : Type u} [Repr α] (xs : Array α) : Std.Format :=
 
 instance {α : Type u} [Repr α] : Repr (Array α) where
   reprPrec xs _ := Array.repr xs
-
-instance [ToString α] : ToString (Array α) where
-  toString xs := String.Internal.append "#" (toString xs.toList)
 
 end Array

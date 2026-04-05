@@ -107,12 +107,23 @@ partial def Code.simpCase (code : Code .impure) : CompilerM (Code .impure) := do
     let decl ← decl.updateValue (← decl.value.simpCase)
     return code.updateFun! decl (← k.simpCase)
   | .return .. | .jmp .. | .unreach .. => return code
-  | .let _ k | .uset (k := k) .. | .sset (k := k) .. | .inc (k := k) .. | .dec (k := k) .. =>
+  | .let _ k | .uset (k := k) .. | .sset (k := k) .. | .inc (k := k) .. | .dec (k := k) ..
+  | .setTag (k := k) .. | .del (k := k) .. | .oset (k := k) .. =>
     return code.updateCont! (← k.simpCase)
 
 def Decl.simpCase (decl : Decl .impure) : CompilerM (Decl .impure) := do
   let value ← decl.value.mapCodeM (·.simpCase)
   return { decl with value }
+
+public def ensureHasDefault (alts : Array (Alt .impure)) : Array (Alt .impure) :=
+  if alts.any (· matches .default ..) then
+    alts
+  else if alts.size < 2 then
+    alts
+  else
+    let last := alts.back!
+    let alts := alts.pop
+    alts.push (.default last.getCode)
 
 public def simpCase : Pass :=
   Pass.mkPerDeclaration `simpCase .impure Decl.simpCase 0

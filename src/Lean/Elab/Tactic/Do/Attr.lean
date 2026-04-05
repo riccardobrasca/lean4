@@ -250,3 +250,21 @@ def SpecExtension.getTheorems (ext : SpecExtension) : CoreM SpecTheorems :=
 
 def getSpecTheorems : CoreM SpecTheorems :=
   specAttr.getTheorems
+
+/--
+Marks a type as an invariant type for the `mvcgen` tactic.
+Goals whose type is an application of a tagged type will be classified
+as invariants rather than verification conditions.
+-/
+builtin_initialize specInvariantAttr : TagAttribute ←
+  registerTagAttribute `spec_invariant_type
+    "marks a type as an invariant type for the `mvcgen` tactic"
+
+/--
+Returns `true` if `ty` is an application of a type tagged with `@[spec_invariant_type]`.
+-/
+def isSpecInvariantType (env : Environment) (ty : Expr) : Bool :=
+  if let .const name .. := ty.getAppFn then
+    specInvariantAttr.hasTag env name
+  else
+    false

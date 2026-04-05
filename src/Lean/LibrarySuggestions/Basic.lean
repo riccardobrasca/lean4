@@ -91,10 +91,10 @@ end FoldRelevantConstantsImpl
 @[implemented_by FoldRelevantConstantsImpl.foldUnsafe]
 public opaque foldRelevantConstants {α : Type} (e : Expr) (init : α) (f : Name → α → MetaM α) : MetaM α := pure init
 
-/-- Collect the constants occuring in `e` (once each), skipping instance arguments and proofs. -/
+/-- Collect the constants occurring in `e` (once each), skipping instance arguments and proofs. -/
 public def relevantConstants (e : Expr) : MetaM (Array Name) := foldRelevantConstants e #[] (fun n ns => return ns.push n)
 
-/-- Collect the constants occuring in `e` (once each), skipping instance arguments and proofs. -/
+/-- Collect the constants occurring in `e` (once each), skipping instance arguments and proofs. -/
 public def relevantConstantsAsSet (e : Expr) : MetaM NameSet := foldRelevantConstants e ∅ (fun n ns => return ns.insert n)
 
 end Lean.Expr
@@ -426,9 +426,7 @@ def elabSetLibrarySuggestions : CommandElab
     -- Generate a fresh name for the selector definition
     let name ← liftMacroM <| Macro.addMacroScope `_librarySuggestions
     -- Elaborate the definition with the library_suggestions attribute
-    -- Note: @[expose] public, to ensure visibility across module boundaries
-    -- Use fully qualified `Lean.LibrarySuggestions.Selector` for module compatibility
-    elabCommand (← `(@[expose, library_suggestions] public def $(mkIdent name) : Lean.LibrarySuggestions.Selector := $selector))
+    elabCommand (← `(@[library_suggestions] public meta def $(mkIdent name) : Selector := $selector))
   | _ => throwUnsupportedSyntax
 
 open Lean.Elab.Tactic in

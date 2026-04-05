@@ -415,35 +415,57 @@ local macro "gen_toml_decoders%" : command => do
 
 gen_toml_decoders%
 
+private structure DecodeTargetState (pkg : Name) where
+  decls : Array (PConfigDecl pkg) := #[]
+  map : DNameMap (NConfigDecl pkg) := {}
+  exeRoots : Lean.NameMap Name := {}
+
 private def decodeTargetDecls
-  (pkg : Name) (t : Table)
+  (pkg : Name) (prettyName : String) (t : Table)
 : DecodeM (Array (PConfigDecl pkg) × DNameMap (NConfigDecl pkg)) := do
-  let r := (#[], {})
+  let r : DecodeTargetState pkg := {}
   let r ← go r LeanLib.keyword LeanLib.configKind LeanLibConfig.decodeToml
   let r ← go r LeanExe.keyword LeanExe.configKind LeanExeConfig.decodeToml
   let r ← go r InputFile.keyword InputFile.configKind InputFileConfig.decodeToml
   let r ← go r InputDir.keyword InputDir.configKind InputDirConfig.decodeToml
-  return r
+  return (r.decls, r.map)
 where
-  go r kw kind (decode : {n : Name} → Table → DecodeM (ConfigType kind pkg n)) := do
+  go (r : DecodeTargetState pkg) kw kind
+      (decode : {n : Name} → Table → DecodeM (ConfigType kind pkg n)) := do
     let some tableArrayVal := t.find? kw | return r
     let some vals ← tryDecode? tableArrayVal.decodeValueArray | return r
     vals.foldlM (init := r) fun r val => do
       let some t ← tryDecode? val.decodeTable | return r
       let some name ← tryDecode? <| stringToLegalOrSimpleName <$> t.decode `name
         | return r
-      let (decls, map) := r
-      if let some orig := map.get? name then
-        modify fun es => es.push <| .mk val.ref s!"\
-          {pkg}: target '{name}' was already defined as a '{orig.kind}', \
+      if let some orig := r.map.get? name then
+        logDecodeErrorAt val.ref s!"{prettyName}: \
+          target '{name}' was already defined as a '{orig.kind}', \
           but then redefined as a '{kind}'"
-        return (decls, map)
+        return r
       else
         let config ← @decode name t
         let decl : NConfigDecl pkg name :=
           -- Safety: By definition, config kind = facet kind for declarative configurations.
           unsafe {pkg, name, kind, config, wf_data := lcProof}
-        return (decls.push decl.toPConfigDecl, map.insert name decl)
+        -- Check that executables have distinct root module names
+        let exeRoots ← id do
+          if h : kind = LeanExe.configKind then
+            let exeConfig : LeanExeConfig name := cast (by rw [h]; rfl) config
+            if let some origExe := r.exeRoots.get? exeConfig.root then
+              logDecodeErrorAt val.ref s!"{prettyName}: \
+                executable '{name}' has the same root module '{exeConfig.root}' as \
+                executable '{origExe}'"
+              return r.exeRoots
+            else
+              return r.exeRoots.insert exeConfig.root name
+          else
+            return r.exeRoots
+        return {
+          decls := r.decls.push decl.toPConfigDecl
+          map := r.map.insert name decl
+          exeRoots
+        }
 
 /-! ## Root Loader -/
 
@@ -458,8 +480,9 @@ public def loadTomlConfig (cfg: LoadConfig) : LogIO Package := do
       let wsIdx := cfg.pkgIdx
       let baseName := if cfg.pkgName.isAnonymous then origName else cfg.pkgName
       let keyName := baseName.num wsIdx
+      let prettyName := baseName.toString (escape := false)
       let config ← @PackageConfig.decodeToml keyName origName table
-      let (targetDecls, targetDeclMap) ← decodeTargetDecls keyName table
+      let (targetDecls, targetDeclMap) ← decodeTargetDecls keyName prettyName table
       let defaultTargets ← table.tryDecodeD `defaultTargets #[]
       let defaultTargets := defaultTargets.map stringToLegalOrSimpleName
       let depConfigs ← table.tryDecodeD `require #[]
@@ -494,7 +517,8 @@ private def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO Lo
     let .ok config errs := EStateM.run (s := #[]) do
       LakeConfig.decodeToml table
     if errs.isEmpty then
-      let cacheServices ← config.cache.services.foldlM (init := {}) fun map cfg => do
+      let defaultService := .reservoirService lakeEnv.reservoirApiUrl
+      let cacheServices : CacheServiceMap ← config.cache.services.foldlM (init := ∅) fun map cfg => do
         let validateUrl name key url := do
           if url.isEmpty then
             error s!"cache service `{name}` is missing field `{key}`"
@@ -503,25 +527,25 @@ private def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO Lo
         match cfg.kind with
         | .reservoir => do
           let apiEndpoint ← validateUrl cfg.name "apiEndpoint" cfg.apiEndpoint
-          let service := .reservoirService apiEndpoint (some cfg.name)
+          let service := .reservoirService apiEndpoint (some (.ofString cfg.name))
           return map.insert (.mkSimple cfg.name) service
         | .s3 => do
           let artifactEndpoint ← validateUrl cfg.name "artifactEndpoint" cfg.artifactEndpoint
           let revisionEndpoint ← validateUrl cfg.name "revisionEndpoint" cfg.revisionEndpoint
-          let service :=  .downloadService artifactEndpoint revisionEndpoint (some cfg.name)
+          let service :=  .downloadService artifactEndpoint revisionEndpoint (some (.ofString cfg.name))
           return map.insert (.mkSimple cfg.name) service
         | _ =>
           error s!"cache service `{cfg.name}` is missing field `kind`"
       let defaultCacheService ← id do
         let name := config.cache.defaultService
         if name.isEmpty then
-          return .reservoirService lakeEnv.reservoirApiUrl
+          return cacheServices.get? `reservoir |>.getD defaultService
         else
           let some service := cacheServices.get? (.mkSimple name)
             | error s!"the configured default cache service `{name}` is not defined; \
                 please add a `cache.service` with that name"
           return service
-      let defaultUploadCacheService? ← id do
+      let defaultCacheUploadService? ← id do
         let name := config.cache.defaultUploadService
         if name.isEmpty then
           return none
@@ -530,7 +554,13 @@ private def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO Lo
             | error s!"the configured default cache upload service `{name}` is not defined; \
                 please add a `cache.service` with that name"
           return some service
-      return {config, defaultCacheService, defaultUploadCacheService?, cacheServices}
+      if cacheServices.contains `reservoir then
+        return {config, defaultCacheService, defaultCacheUploadService?, cacheServices}
+      else
+         let cacheServices := cacheServices.insert `reservoir defaultService
+         let defaultServiceConfig := {name := "reservoir", kind := .reservoir, apiEndpoint := lakeEnv.reservoirApiUrl}
+         let config := {config with cache.services := config.cache.services.push defaultServiceConfig}
+         return {config, defaultCacheService, defaultCacheUploadService?, cacheServices}
     else
       errorWithLog <| errs.forM fun {ref, msg} =>
         let pos := ictx.fileMap.toPosition <| ref.getPos?.getD 0
@@ -538,12 +568,15 @@ private def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO Lo
   | .error log =>
     errorWithLog <| log.forM fun msg => do logError (← msg.toString)
 
-private def LoadedLakeConfig.mkDefault (lakeEnv : Lake.Env) : LoadedLakeConfig := {
-  config := ∅
-  defaultCacheService := .reservoirService lakeEnv.reservoirApiUrl
-  defaultUploadCacheService? := none
-  cacheServices := ∅
-}
+private def LoadedLakeConfig.mkDefault (lakeEnv : Lake.Env) : LoadedLakeConfig :=
+  let defaultService := .reservoirService lakeEnv.reservoirApiUrl
+  let defaultServiceConfig := {name := "reservoir", kind := .reservoir, apiEndpoint := lakeEnv.reservoirApiUrl}
+  {
+    config.cache.services := #[defaultServiceConfig]
+    defaultCacheService := defaultService
+    defaultCacheUploadService? := none
+    cacheServices := NameMap.empty.insert `reservoir defaultService
+  }
 
 /--
 **For internal use only.**

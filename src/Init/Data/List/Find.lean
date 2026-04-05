@@ -184,7 +184,7 @@ theorem Sublist.findSome?_isSome {l₁ l₂ : List α} (h : l₁ <+ l₂) :
   induction h with
   | slnil => simp
   | cons a h ih
-  | cons₂ a h ih =>
+  | cons_cons a h ih =>
     simp only [findSome?]
     split
     · simp_all
@@ -455,7 +455,7 @@ theorem Sublist.find?_isSome {l₁ l₂ : List α} (h : l₁ <+ l₂) : (l₁.fi
   induction h with
   | slnil => simp
   | cons a h ih
-  | cons₂ a h ih =>
+  | cons_cons a h ih =>
     simp only [find?]
     split
     · simp
@@ -1050,7 +1050,7 @@ theorem findFinIdx?_append {xs ys : List α} {p : α → Bool} :
 
 @[simp, grind =] theorem findFinIdx?_singleton {a : α} {p : α → Bool} :
     [a].findFinIdx? p = if p a then some ⟨0, by simp⟩ else none := by
-  simp [findFinIdx?_cons, findFinIdx?_nil]; rfl
+  simp [findFinIdx?_cons, findFinIdx?_nil]
 
 @[simp, grind =] theorem findFinIdx?_eq_none_iff {l : List α} {p : α → Bool} :
     l.findFinIdx? p = none ↔ ∀ x ∈ l, ¬ p x := by

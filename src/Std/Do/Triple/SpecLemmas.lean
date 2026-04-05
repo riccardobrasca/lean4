@@ -136,6 +136,15 @@ theorem Cursor.pos_at {l : List α} {n : Nat} (h : n < l.length) :
 theorem Cursor.pos_mk {l pre suff : List α} (h : pre ++ suff = l) :
     (Cursor.mk pre suff h).pos = pre.length := rfl
 
+theorem Cursor.pos_le_length {c : Cursor l} : c.pos ≤ l.length := by
+  simp [← congrArg List.length c.property]
+
+theorem Cursor.length_prefix_le_length {c : Cursor l} : c.prefix.length ≤ l.length :=
+  pos_le_length
+
+theorem Cursor.length_suffix_le_length {c : Cursor l} : c.suffix.length ≤ l.length := by
+  simp [← congrArg List.length c.property]
+
 @[grind →]
 theorem eq_of_range'_eq_append_cons (h : range' s n step = xs ++ cur :: ys) :
     cur = s + step * xs.length := by
@@ -688,6 +697,7 @@ After leaving the loop, the cursor's prefix is `xs` and the suffix is empty.
 During the induction step, the invariant holds for a suffix with head element `x`.
 After running the loop body, the invariant then holds after shifting `x` to the prefix.
 -/
+@[spec_invariant_type]
 abbrev Invariant {α : Type u₁} (xs : List α) (β : Type u₂) (ps : PostShape.{max u₁ u₂}) :=
   PostCond (List.Cursor xs × β) ps
 
@@ -709,11 +719,23 @@ successfully proving the induction step, as it contradicts with the assumption t
 won't need to prove anything about the bogus case where the loop has returned early yet takes
 another iteration of the loop body.
 -/
-abbrev Invariant.withEarlyReturn
+abbrev Invariant.withEarlyReturn {α} {xs : List α} {γ : Type (max u₁ u₂)}
   (onContinue : List.Cursor xs → β → Assertion ps)
   (onReturn : γ → β → Assertion ps)
   (onExcept : ExceptConds ps := ExceptConds.false) :
     Invariant xs (MProd (Option γ) β) ps :=
+  ⟨fun ⟨xs, x, b⟩ => spred(
+        (⌜x = none⌝ ∧ onContinue xs b)
+      ∨ (∃ r, ⌜x = some r⌝ ∧ ⌜xs.suffix = []⌝ ∧ onReturn r b)),
+   onExcept⟩
+
+/-- Like `Invariant.withEarlyReturn`, but for the new `do` elaborator which uses `Prod`
+instead of `MProd` for the state tuple. -/
+abbrev Invariant.withEarlyReturnNewDo {α} {xs : List α} {γ : Type (max u₁ u₂)}
+  (onContinue : List.Cursor xs → β → Assertion ps)
+  (onReturn : γ → β → Assertion ps)
+  (onExcept : ExceptConds ps := ExceptConds.false) :
+    Invariant xs (Prod (Option γ) β) ps :=
   ⟨fun ⟨xs, x, b⟩ => spred(
         (⌜x = none⌝ ∧ onContinue xs b)
       ∨ (∃ r, ⌜x = some r⌝ ∧ ⌜xs.suffix = []⌝ ∧ onReturn r b)),
@@ -1998,6 +2020,18 @@ theorem Spec.foldlM_array {α β : Type u} {m : Type u → Type v} {ps : PostSha
   apply Spec.foldlM_list inv step
 
 /--
+The type of loop invariants used by the specifications of `for ... in ...` loops over strings.
+A loop invariant is a `PostCond` that takes as parameters
+
+* A `String.Pos` representing the current position in the string `s`.
+* A state tuple of type `β`, which will be a nesting of `MProd`s representing the elaboration of
+  `let mut` variables and early return.
+-/
+@[spec_invariant_type]
+abbrev StringInvariant (s : String) (β : Type u) (ps : PostShape.{u}) :=
+  PostCond (s.Pos × β) ps
+
+/--
 Helper definition for specifying loop invariants for loops with early return.
 
 `for ... in ...` loops with early return of type `γ` elaborate to a call like this:
@@ -2019,7 +2053,20 @@ abbrev StringInvariant.withEarlyReturn {s : String}
   (onContinue : s.Pos → β → Assertion ps)
   (onReturn : γ → β → Assertion ps)
   (onExcept : ExceptConds ps := ExceptConds.false) :
-    PostCond (s.Pos × MProd (Option γ) β) ps
+    StringInvariant s (MProd (Option γ) β) ps
+    :=
+  ⟨fun ⟨pos, x, b⟩ => spred(
+        (⌜x = none⌝ ∧ onContinue pos b)
+      ∨ (∃ r, ⌜x = some r⌝ ∧ ⌜pos = s.endPos⌝ ∧ onReturn r b)),
+   onExcept⟩
+
+/-- Like `StringInvariant.withEarlyReturn`, but for the new `do` elaborator which uses `Prod`
+instead of `MProd` for the state tuple. -/
+abbrev StringInvariant.withEarlyReturnNewDo {s : String}
+  (onContinue : s.Pos → β → Assertion ps)
+  (onReturn : γ → β → Assertion ps)
+  (onExcept : ExceptConds ps := ExceptConds.false) :
+    StringInvariant s (Prod (Option γ) β) ps
     :=
   ⟨fun ⟨pos, x, b⟩ => spred(
         (⌜x = none⌝ ∧ onContinue pos b)
@@ -2029,7 +2076,7 @@ abbrev StringInvariant.withEarlyReturn {s : String}
 @[spec]
 theorem Spec.forIn_string
     {s : String} {init : β} {f : Char → β → m (ForInStep β)}
-    (inv : PostCond (s.Pos × β) ps)
+    (inv : StringInvariant s β ps)
     (step : ∀ pos b (h : pos ≠ s.endPos),
       Triple
         (f (pos.get h) b)
@@ -2058,6 +2105,18 @@ theorem Spec.forIn_string
   | endPos => simpa using Triple.pure _ (by simp)
 
 /--
+The type of loop invariants used by the specifications of `for ... in ...` loops over string slices.
+A loop invariant is a `PostCond` that takes as parameters
+
+* A `String.Slice.Pos` representing the current position in the string slice `s`.
+* A state tuple of type `β`, which will be a nesting of `MProd`s representing the elaboration of
+  `let mut` variables and early return.
+-/
+@[spec_invariant_type]
+abbrev StringSliceInvariant (s : String.Slice) (β : Type u) (ps : PostShape.{u}) :=
+  PostCond (s.Pos × β) ps
+
+/--
 Helper definition for specifying loop invariants for loops with early return.
 
 `for ... in ...` loops with early return of type `γ` elaborate to a call like this:
@@ -2079,7 +2138,20 @@ abbrev StringSliceInvariant.withEarlyReturn {s : String.Slice}
   (onContinue : s.Pos → β → Assertion ps)
   (onReturn : γ → β → Assertion ps)
   (onExcept : ExceptConds ps := ExceptConds.false) :
-    PostCond (s.Pos × MProd (Option γ) β) ps
+    StringSliceInvariant s (MProd (Option γ) β) ps
+    :=
+  ⟨fun ⟨pos, x, b⟩ => spred(
+        (⌜x = none⌝ ∧ onContinue pos b)
+      ∨ (∃ r, ⌜x = some r⌝ ∧ ⌜pos = s.endPos⌝ ∧ onReturn r b)),
+   onExcept⟩
+
+/-- Like `StringSliceInvariant.withEarlyReturn`, but for the new `do` elaborator which uses `Prod`
+instead of `MProd` for the state tuple. -/
+abbrev StringSliceInvariant.withEarlyReturnNewDo {s : String.Slice}
+  (onContinue : s.Pos → β → Assertion ps)
+  (onReturn : γ → β → Assertion ps)
+  (onExcept : ExceptConds ps := ExceptConds.false) :
+    StringSliceInvariant s (Prod (Option γ) β) ps
     :=
   ⟨fun ⟨pos, x, b⟩ => spred(
         (⌜x = none⌝ ∧ onContinue pos b)
@@ -2089,7 +2161,7 @@ abbrev StringSliceInvariant.withEarlyReturn {s : String.Slice}
 @[spec]
 theorem Spec.forIn_stringSlice
     {s : String.Slice} {init : β} {f : Char → β → m (ForInStep β)}
-    (inv : PostCond (s.Pos × β) ps)
+    (inv : StringSliceInvariant s β ps)
     (step : ∀ pos b (h : pos ≠ s.endPos),
       Triple
         (f (pos.get h) b)

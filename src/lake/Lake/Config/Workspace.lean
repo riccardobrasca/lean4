@@ -22,6 +22,13 @@ open Lean (Name LeanOptions)
 
 namespace Lake
 
+/-- **For internal use only.** Computes the cache to use for the package based on the environment. -/
+public def computeLakeCache (pkg : Package) (lakeEnv : Lake.Env) : Cache :=
+  if pkg.bootstrap then
+    lakeEnv.lakeSystemCache?.getD ⟨pkg.lakeDir / "cache"⟩
+  else
+    lakeEnv.lakeCache?.getD ⟨pkg.lakeDir / "cache"⟩
+
 /-- A Lake workspace -- the top-level package directory. -/
 public structure Workspace : Type where
   /-- The root package of the workspace. -/
@@ -31,9 +38,7 @@ public structure Workspace : Type where
   /-- The Lake configuration from the system configuration file. -/
   lakeConfig : LoadedLakeConfig
   /-- The Lake cache. -/
-  lakeCache : Cache :=
-    if root.bootstrap then lakeEnv.lakeSystemCache?.getD ⟨root.lakeDir / "cache"⟩
-    else lakeEnv.lakeCache?.getD ⟨root.lakeDir / "cache"⟩
+  lakeCache : Cache := private_decl% computeLakeCache root lakeEnv
   /--
   The CLI arguments Lake was run with.
   Used by {lit}`lake update` to perform a restart of Lake on a toolchain update.
@@ -105,6 +110,14 @@ public def isRootArtifactCacheWritable (ws : Workspace) : Bool :=
 public abbrev isRootArtifactCacheEnabled (ws : Workspace) : Bool :=
   ws.isRootArtifactCacheWritable
 
+/-- Whether artifacts should be restored by default from the Lake cache for packages in the workspace. -/
+@[inline] public def restoreAllArtifacts? (ws : Workspace) : Option Bool :=
+  ws.root.restoreAllArtifacts?
+
+/-- Returns the toolchain identifier for the Lake cache corresponding the workspace's toolchain. -/
+@[inline] public def cacheToolchain (ws : Workspace) : CacheToolchain :=
+  ws.lakeEnv.cacheToolchain
+
 /--
 Returns the cache service used by default for downloads (e.g., for {lit}`lake cache get`).
 
@@ -120,12 +133,12 @@ Returns the cache service (if any) used by default for uploads (e.g., for {lit}`
 This is configured through {lit}`cache.defaultUploadService` in the system Lake configuration.
 -/
 @[inline] public def defaultCacheUploadService? (ws : Workspace) : Option CacheService :=
-  ws.lakeConfig.defaultUploadCacheService?
+  ws.lakeConfig.defaultCacheUploadService?
 
 /--
 Returns the configured cache service with the given name.
 
-This is configured through {lit}`cache.service` entries in the global Lake configuration.
+This is configured through {lit}`cache.service` entries in the system Lake configuration.
 -/
 @[inline] public def findCacheService? (ws : Workspace) (service : String) : Option CacheService :=
   ws.lakeConfig.cacheServices.find? (.mkSimple service)

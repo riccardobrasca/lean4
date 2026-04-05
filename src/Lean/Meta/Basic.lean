@@ -6,6 +6,7 @@ Authors: Leonardo de Moura
 module
 
 prelude
+public import Init.Control.Do
 public import Lean.Data.LOption
 public import Lean.Class
 public import Lean.ReducibilityAttrs
@@ -716,20 +717,25 @@ def recordSynthPendingFailure (type : Expr) : MetaM Unit := do
       modifyDiag fun { unfoldCounter, unfoldAxiomCounter, heuristicCounter, instanceCounter, synthPendingFailures } =>
         { unfoldCounter, unfoldAxiomCounter, heuristicCounter, instanceCounter, synthPendingFailures := synthPendingFailures.insert type msg }
 
+@[inline]
 def getLocalInstances : MetaM LocalInstances :=
   return (← read).localInstances
 
+@[inline]
 def getConfig : MetaM Config :=
   return (← read).config
 
+@[inline]
 def getConfigWithKey : MetaM ConfigWithKey :=
   return (← getConfig).toConfigWithKey
 
 /-- Return the array of postponed universe level constraints. -/
+@[inline]
 def getPostponed : MetaM (PersistentArray PostponedEntry) :=
   return (← get).postponed
 
 /-- Set the array of postponed universe level constraints. -/
+@[inline]
 def setPostponed (postponed : PersistentArray PostponedEntry) : MetaM Unit :=
   modify fun s => { s with postponed := postponed }
 
@@ -742,7 +748,7 @@ def setPostponed (postponed : PersistentArray PostponedEntry) : MetaM Unit :=
   for the inductive datatype `inductName`.
 
   Recall we have three different settings: `.none` (never use it), `.all` (always use it), `.notClasses`
-  (enabled only for structure-like inductive types that are not classes).
+  (enabled only for non-recursive structure types that are not classes).
 
   The parameter `inductName` affects the result only if the current setting is `.notClasses`.
 -/
@@ -759,6 +765,7 @@ have to hard-code the true arity of these definitions here, and make sure the C 
 We have used another hack based on `IO.Ref`s in the past, it was safer but less efficient.
 -/
 
+set_option compiler.ignoreBorrowAnnotation true in
 /--
 Reduces an expression to its *weak head normal form*.
 This is when the "head" of the top-level expression has been fully reduced.
@@ -767,6 +774,7 @@ The result may contain subexpressions that have not been reduced.
 See `Lean.Meta.whnfImp` for the implementation.
 -/
 @[extern "lean_whnf"] opaque whnf : Expr → MetaM Expr
+set_option compiler.ignoreBorrowAnnotation true in
 /--
 Returns the inferred type of the given expression. Assumes the expression is type-correct.
 
@@ -821,8 +829,11 @@ def e3 : Expr := .app (.const ``Nat.zero []) (.const ``Nat.zero [])
 See `Lean.Meta.inferTypeImp` for the implementation of `inferType`.
 -/
 @[extern "lean_infer_type"] opaque inferType : Expr → MetaM Expr
+set_option compiler.ignoreBorrowAnnotation true in
 @[extern "lean_is_expr_def_eq"] opaque isExprDefEqAux : Expr → Expr → MetaM Bool
+set_option compiler.ignoreBorrowAnnotation true in
 @[extern "lean_is_level_def_eq"] opaque isLevelDefEqAux : Level → Level → MetaM Bool
+set_option compiler.ignoreBorrowAnnotation true in
 @[extern "lean_synth_pending"] protected opaque synthPending : MVarId → MetaM Bool
 
 def whnfForall (e : Expr) : MetaM Expr := do
@@ -898,12 +909,15 @@ def mkConstWithFreshMVarLevels (declName : Name) : MetaM Expr := do
   return mkConst declName (← mkFreshLevelMVarsFor info)
 
 /-- Return current transparency setting/mode. -/
+@[inline]
 def getTransparency : MetaM TransparencyMode :=
   return (← getConfig).transparency
 
+@[inline]
 def shouldReduceAll : MetaM Bool :=
   return (← getTransparency) == TransparencyMode.all
 
+@[inline]
 def shouldReduceReducibleOnly : MetaM Bool :=
   return (← getTransparency) == TransparencyMode.reducible
 
@@ -1315,7 +1329,7 @@ private def getDefInfoTemp (info : ConstantInfo) : MetaM (Option ConstantInfo) :
    `constName` is an instance. This difference should be irrelevant for `isClassQuickConst?`. -/
 private def getConstTemp? (constName : Name) : MetaM (Option ConstantInfo) := do
   match (← getEnv).find? constName with
-  | some (info@(ConstantInfo.thmInfo _))  => getTheoremInfo info
+  | some (ConstantInfo.thmInfo _)          => return none
   | some (info@(ConstantInfo.defnInfo _)) => getDefInfoTemp info
   | some info                             => pure (some info)
   | none                                  => throwUnknownConstantAt (← getRef) constName
@@ -2293,7 +2307,7 @@ Return `true` if `indVal` is an inductive predicate. That is, `inductive` type i
 def isInductivePredicateVal (indVal : InductiveVal) : MetaM Bool := do
   forallTelescopeReducing indVal.type fun _ type => do
     match (← whnfD type) with
-    | .sort u .. => return u == levelZero
+    | .sort u .. => return u == Level.zero
     | _ => return false
 
 /--
@@ -2497,6 +2511,7 @@ def isDefEqD (t s : Expr) : MetaM Bool :=
 def isDefEqI (t s : Expr) : MetaM Bool :=
   withReducibleAndInstances <| isDefEq t s
 
+set_option compiler.ignoreBorrowAnnotation true in
 /--
 Returns `true` if `mvarId := val` was successfully assigned.
 This method uses the same assignment validation performed by `isDefEq`, but it does not check whether the types match.
@@ -2709,7 +2724,14 @@ where
         -- catch all exceptions
         let _ : MonadExceptOf _ MetaM := MonadAlwaysExcept.except
         observing do
-          withDeclNameForAuxNaming constName do
+          -- Re-privatize private `constName` under the current module so that auxiliary
+          -- declarations generated during realization get names scoped to the realizing module,
+          -- not the original defining module. This prevents name collisions when the same
+          -- constant is realized independently from two modules that are later imported together
+          -- (diamond import pattern).
+          let namePrefix :=
+            if isPrivateName constName then mkPrivateName env constName else constName
+          withDeclNameForAuxNaming namePrefix do
             withoutExporting (when := isPrivateName constName) do
               realize
           -- Meta code working on a non-exported declaration should usually do so inside

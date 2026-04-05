@@ -188,8 +188,12 @@ def processDefDeriving (view : DerivingClassView) (decl : Expr) (isNoncomputable
   let ConstantInfo.defnInfo info ← getConstInfo declName
     | throwError "Failed to delta derive instance, `{.ofConstName declName}` is not a definition."
   let value := info.value.beta decl.getAppArgs
+<<<<<<< HEAD
   let (result, preNormValue, instName) ←
     show TermElabM (Closure.MkValueTypeClosureResult × Expr × Name) from
+=======
+  let (result, preNormValue, instName) : Closure.MkValueTypeClosureResult × Expr × Name ←
+>>>>>>> v4.30.0-rc1
     -- Assumption: users intend delta deriving to apply to the body of a definition, even if in the source code
     -- the function is written as a lambda expression.
     -- Furthermore, we don't use `forallTelescope` because users want to derive instances for monads.

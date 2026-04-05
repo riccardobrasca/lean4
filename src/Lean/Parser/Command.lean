@@ -8,6 +8,8 @@ module
 prelude
 public import Lean.Parser.Do
 import Lean.DocString.Parser
+meta import Lean.Parser.Do
+meta import Lean.DocString.Parser
 
 public section
 
@@ -590,6 +592,8 @@ See also: `#reduce e` for evaluation by term reduction.
   "#print " >> (ident <|> strLit)
 @[builtin_command_parser] def printSig       := leading_parser
   "#print " >> nonReservedSymbol "sig " >> ident
+/-- Prints the axioms used by a declaration, directly or indirectly.
+Please consult [the reference manual](lean-manual://section/validating-proofs) to understand the significance of the output. -/
 @[builtin_command_parser] def printAxioms    := leading_parser
   "#print " >> nonReservedSymbol "axioms " >> ident
 @[builtin_command_parser] def printEqns      := leading_parser
@@ -964,20 +968,6 @@ Note that the error name is not relativized to the current namespace.
 -/
 @[builtin_command_parser] def registerErrorExplanationStx := leading_parser
   optional docComment >> "register_error_explanation " >> ident >> termParser
-
-/--
-Returns syntax for `private` or `public` visibility depending on `isPublic`. This function should be
-used to generate visibility syntax for declarations that is independent of the presence of
-`public section`s.
--/
-def visibility.ofBool (isPublic : Bool) : TSyntax ``visibility :=
-  Unhygienic.run <| if isPublic then `(visibility| public) else `(visibility| private)
-
-/--
-Returns syntax for `private` if `attrKind` is `local` and `public` otherwise.
--/
-def visibility.ofAttrKind (attrKind : TSyntax ``Term.attrKind) : TSyntax ``visibility :=
-  visibility.ofBool <| !attrKind matches `(attrKind| local)
 
 end Command
 

@@ -207,7 +207,7 @@ theorem take_eq_dropLast {l : List α} {i : Nat} (h : i + 1 = l.length) :
     · cases as with
       | nil => simp_all
       | cons b bs =>
-        simp only [take_succ_cons, dropLast_cons₂]
+        simp only [take_succ_cons, dropLast_cons_cons]
         rw [ih]
         simpa using h
 
@@ -311,7 +311,7 @@ theorem drop_length_cons {l : List α} (h : l ≠ []) (a : α) :
   | nil =>
     cases h rfl
   | cons y l ih =>
-    simp only [drop, length]
+    simp only [drop]
     by_cases h₁ : l = []
     · simp [h₁]
     rw [getLast_cons h₁]

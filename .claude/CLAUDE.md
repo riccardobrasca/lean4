@@ -1,31 +1,70 @@
 (In the following, use `sysctl -n hw.logicalcpu` instead of `nproc` on macOS)
 
+## Building
+
 To build Lean you should use `make -j$(nproc) -C build/release`.
+
+The build uses `ccache`, and in a sandbox `ccache` may complain about read-only file systems.
+Use `CCACHE_READONLY` and `CCACHE_TEMPDIR` instead of disabling ccache completely.
+
+To rebuild individual modules without a full build, use Lake directly:
+```
+cd src && lake build Init.Prelude
+```
 
 ## Running Tests
 
-See `doc/dev/testing.md` for full documentation. Quick reference:
+See `tests/README.md` for full documentation. Quick reference:
 
 ```bash
 # Full test suite (use after builds to verify correctness)
-make -j$(nproc) -C build/release test ARGS="-j$(nproc)"
+CTEST_PARALLEL_LEVEL="$(nproc)" CTEST_OUTPUT_ON_FAILURE=1 \
+make -C build/release -j "$(nproc)" test
 
-# Specific test by name (supports regex via ctest -R)
-make -j$(nproc) -C build/release test ARGS='-R grind_ematch --output-on-failure'
+# Specific test by name (supports regex via ctest -R; double-quote special chars like |)
+CTEST_PARALLEL_LEVEL="$(nproc)" CTEST_OUTPUT_ON_FAILURE=1 \
+make -C build/release -j "$(nproc)" test ARGS="-R 'grind_ematch'"
+
+# Multiple tests matching a pattern
+CTEST_PARALLEL_LEVEL="$(nproc)" CTEST_OUTPUT_ON_FAILURE=1 \
+make -C build/release -j "$(nproc)" test ARGS="-R 'treemap|phashmap'"
 
 # Rerun only previously failed tests
-make -j$(nproc) -C build/release test ARGS='--rerun-failed --output-on-failure'
+CTEST_PARALLEL_LEVEL="$(nproc)" CTEST_OUTPUT_ON_FAILURE=1 \
+make -C build/release -j "$(nproc)" test ARGS='--rerun-failed'
 
-# Single test from tests/lean/run/ (quick check during development)
-cd tests/lean/run && ./test_single.sh example_test.lean
-
-# ctest directly (from stage1 build dir)
-cd build/release/stage1 && ctest -j$(nproc) --output-on-failure --timeout 300
+# Run a test manually without ctest (test pile: pass filename relative to the pile dir)
+tests/with_stage1_test_env.sh tests/elab_bench/run_bench.sh cbv_decide.lean
+tests/with_stage1_test_env.sh tests/elab/run_test.sh grind_indexmap.lean
 ```
 
-The full test suite includes `tests/lean/`, `tests/lean/run/`, `tests/lean/interactive/`,
-`tests/compiler/`, `tests/pkg/`, Lake tests, and more. Using `make test` or `ctest` runs
-all of them; `test_single.sh` in `tests/lean/run/` only covers that one directory.
+## Benchmark vs Test Problem Sizes
+
+Benchmarks are also run as tests. Use the `TEST_BENCH` environment variable (unset in tests, set to `1` in benchmarks) to scale problem sizes:
+
+- In `compile_bench` `.init.sh` files: check `$TEST_BENCH` and set `TEST_ARGS` accordingly
+- In `elab_bench` Lean files: use `(← IO.getEnv "TEST_BENCH") == some "1"` to switch between small (test) and large (bench) inputs
+
+See `tests/README.md` for the full benchmark writing guide.
+
+## Testing stage 2
+
+When requested to test stage 2, build it as follows:
+```
+make -C build/release stage2 -j$(nproc)
+```
+Stage 2 is *not* automatically invalidated by changes to `src/` which allows for faster iteration
+when fixing a specific file in the stage 2 build but for invalidating any files that already passed
+the stage 2 build as well as for final validation,
+```
+make -C build/release/stage2 clean-stdlib
+```
+must be run manually before building.
+
+To rebuild individual stage 2 modules without a full `make stage2`, use Lake directly:
+```
+cd build/release/stage2 && lake build Init.Prelude
+```
 
 ## New features
 
@@ -33,8 +72,6 @@ When asked to implement new features:
 * begin by reviewing existing relevant code and tests
 * write comprehensive tests first (expecting that these will initially fail)
 * and then iterate on the implementation until the tests pass.
-
-All new tests should go in `tests/lean/run/`. These tests don't have expected output; we just check there are no errors. You should use `#guard_msgs` to check for specific messages.
 
 ## Success Criteria
 
@@ -45,6 +82,10 @@ All new tests should go in `tests/lean/run/`. These tests don't have expected ou
 **NEVER manually delete build directories** (build/, stage0/, stage1/, etc.) even when builds fail.
 - ONLY use the project's documented build command: `make -j$(nproc) -C build/release`
 - If a build is broken, ask the user before attempting any manual cleanup
+
+## stage0 Is a Copy of src
+
+**Never manually edit files under `stage0/`.** The `stage0/` directory is a snapshot of `src/` produced by `make update-stage0`. To change anything in stage0 (CMakeLists.txt, C++ source, etc.), edit the corresponding file in `src/` and let `update-stage0` propagate it.
 
 ## LSP and IDE Diagnostics
 
