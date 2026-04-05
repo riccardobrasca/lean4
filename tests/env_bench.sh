@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-export LEAN_CC=/usr/bin/cc STAGE='1' SRC_DIR='/home/ricky/lean/lean4/src' TEST_DIR='/home/ricky/lean/lean4/tests' BUILD_DIR='/home/ricky/lean/lean4/build/release/stage1' SCRIPT_DIR='/home/ricky/lean/lean4/src/../script' PATH='/home/ricky/lean/lean4/build/release/stage1/bin':"$PATH" LEANC_OPTS=' -I/home/ricky/lean/lean4/build/release/stage1/include -O3 -DNDEBUG' CXX='/usr/bin/c++  -I/home/ricky/lean/lean4/build/release/stage1/include -O3 -DNDEBUG' TEST_BENCH= TEST_BENCH=1
