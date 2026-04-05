@@ -343,19 +343,11 @@ def check_stage0_version(repo_url, branch, version_major, version_minor, github_
     for line in content.splitlines():
         stripped = line.strip()
         if stripped.startswith("set(LEAN_VERSION_MAJOR "):
-<<<<<<< HEAD
-            actual = stripped.split()[-1].rstrip(")")
-            if actual != str(version_major):
-                errors.append(f"LEAN_VERSION_MAJOR: expected {version_major}, found {actual}")
-        elif stripped.startswith("set(LEAN_VERSION_MINOR "):
-            actual = stripped.split()[-1].rstrip(")")
-=======
             actual = stripped.split()[1].rstrip(")")
             if actual != str(version_major):
                 errors.append(f"LEAN_VERSION_MAJOR: expected {version_major}, found {actual}")
         elif stripped.startswith("set(LEAN_VERSION_MINOR "):
             actual = stripped.split()[1].rstrip(")")
->>>>>>> v4.30.0-rc1
             if actual != str(version_minor):
                 errors.append(f"LEAN_VERSION_MINOR: expected {version_minor}, found {actual}")
 
