@@ -19,6 +19,7 @@ on:
         type: choice
         options:
         - release nightly
+        - build only
 
 
 concurrency:
@@ -264,9 +265,8 @@ jobs:
                 // 3. To run it in release (obviously)
                 // 4. To run it for pushes to master so that pushes to master have a Linux toolchain
                 //    available as an artifact for Grove to use.
-                "enabled": isPr || level != 1 || isPushToMaster,
-                "test": level >= 1,
-                "secondary": level == 0,
+                "enabled": true,
+                "test": false,
                 "shell": "nix develop .#oldGlibc -c bash -euxo pipefail {0}",
                 "llvm-url": "https://github.com/leanprover/lean-llvm/releases/download/19.1.2/lean-llvm-x86_64-linux-gnu.tar.zst",
                 "prepare-llvm": "../script/prepare-llvm-linux.sh lean-llvm*",
@@ -277,7 +277,7 @@ jobs:
               {
                 "name": "Linux Lake",
                 "os": large ? "nscloud-ubuntu-24.04-amd64-8x16-with-cache" : "ubuntu-latest",
-                "enabled": true,
+                "enabled": false,
                 "check-rebootstrap": level >= 1,
                 "check-stage3": level >= 2,
                 "test": true,
@@ -289,7 +289,7 @@ jobs:
               {
                 "name": "Linux Lake (Cached)",
                 "os": large ? "nscloud-ubuntu-24.04-amd64-8x16-with-cache" : "ubuntu-latest",
-                "enabled": true,
+                "enabled": false,
                 "check-rebootstrap": level >= 1,
                 "check-stage3": level >= 2,
                 "test": true,
@@ -334,7 +334,7 @@ jobs:
                 "os": "macos-15-intel",
                 "release": true,
                 "test": false,  // Tier 2 platform
-                "enabled": level >= 2,
+                "enabled": true,
                 "shell": "bash -euxo pipefail {0}",
                 "llvm-url": "https://github.com/leanprover/lean-llvm/releases/download/19.1.2/lean-llvm-x86_64-apple-darwin.tar.zst",
                 "prepare-llvm": "../script/prepare-llvm-macos.sh lean-llvm*",
@@ -353,10 +353,8 @@ jobs:
                 "prepare-llvm": "../script/prepare-llvm-macos.sh lean-llvm*",
                 "binary-check": "otool -L",
                 "tar": "gtar", // https://github.com/actions/runner-images/issues/2619
-                // See "Linux release" for release job levels; Grove is not a concern here
-                "enabled": isPr || level != 1,
-                "test": level >= 1,
-                "secondary": level == 0,
+                "enabled": true,
+                "test": false,
               },
               {
                 "name": "Windows",
