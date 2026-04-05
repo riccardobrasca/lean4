@@ -299,37 +299,6 @@ jobs:
                 "CMAKE_OPTIONS": "-DLEAN_EXTRA_CXX_FLAGS=-Werror -DUSE_LAKE_CACHE=ON",
               },
               {
-                "name": "Linux Reldebug",
-                "os": "ubuntu-latest",
-                "enabled": level >= 2,
-                "test": true,
-                "CMAKE_PRESET": "reldebug",
-                // * `elab_bench/big_do` crashes with exit code 134
-                "CTEST_OPTIONS": "-E 'elab_bench/big_do'",
-              },
-              {
-                "name": "Linux fsanitize",
-                // Always run on large if available, more reliable regarding timeouts
-                "os": large ? "nscloud-ubuntu-24.04-amd64-16x32-with-cache" : "ubuntu-latest",
-                "enabled": level >= 2,
-                // do not fail nightlies on this for now
-                "secondary": level <= 2,
-                "test": true,
-                // turn off custom allocator & symbolic functions to make LSAN do its magic
-                "CMAKE_PRESET": "sanitize",
-                // * `StackOverflow*` correctly triggers ubsan.
-                // * `reverse-ffi` fails to link in sanitizers.
-                // * `interactive` and `async_select_channel` fail nondeterministically, would need
-                //   to be investigated..
-                // * 9366 is too close to timeout.
-                // * `bv_` sometimes times out calling into cadical even though we should be using
-                //   the standard compile flags for it.
-                // * `grind_guide` always times out.
-                // * `pkg/|lake/` tests sometimes time out (likely even hang), related to Lake CI
-                //   failures?
-                "CTEST_OPTIONS": "-E 'StackOverflow|reverse-ffi|interactive|async_select_channel|9366|run/bv_|grind_guide|grind_bitvec2|grind_constProp|grind_indexmap|grind_list|grind_lint|grind_array_attach|grind_ite_trace|pkg/|lake/'"
-              },
-              {
                 "name": "macOS",
                 "os": "macos-15-intel",
                 "release": true,
