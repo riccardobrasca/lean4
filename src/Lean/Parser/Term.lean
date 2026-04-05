@@ -774,17 +774,6 @@ In particular, it is like a unary operation with a fixed parameter `b`, where on
 @[builtin_term_parser] def noImplicitLambda := leading_parser
   "no_implicit_lambda% " >> termParser maxPrec
 /--
-<<<<<<< HEAD
-`inferInstanceAs α` synthesizes an instance of type `α`, transporting it from a
-definitionally equal type if necessary. This is useful when `α` is definitionally equal to
-some `α'` for which instances are registered, as it prevents leaking the definition's RHS
-at lower transparencies.
-
-`inferInstanceAs` requires an expected type from context. If you just need to synthesize an
-instance without transporting between types, use `inferInstance` instead.
-
-See `Lean.Meta.WrapInstance` for details.
-=======
 `inferInstanceAs α` synthesizes an instance of type `α` and then adjusts it to conform to the
 expected type `β`, which must be inferable from context.
 
@@ -814,7 +803,6 @@ disabled to help with porting:
 
 If you just need to synthesize an instance without transporting between types, use `inferInstance`
 instead, potentially with a type annotation for the expected type.
->>>>>>> v4.30.0-rc1
 -/
 @[builtin_term_parser] def «inferInstanceAs» := leading_parser
   "inferInstanceAs" >> (((" $ " <|> " <| ") >> termParser minPrec) <|> (ppSpace >> termParser argPrec))

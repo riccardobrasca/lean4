@@ -129,13 +129,8 @@ def hasParam (u : Level) : Bool :=
 
 end Level
 
-<<<<<<< HEAD
-@[expose, implicit_reducible] def levelZero :=
-  Level.zero
-=======
 @[deprecated Level.zero (since := "2026-02-27")] -- This was previously required in order to get the computed field `data` to work, but it is no longer needed.
 abbrev levelZero := Level.zero
->>>>>>> v4.30.0-rc1
 
 def mkLevelMVar (mvarId : LMVarId) :=
   Level.mvar mvarId
@@ -222,11 +217,7 @@ def isAlwaysZero : Level → Bool
   | imax _  l₂   => isAlwaysZero l₂
 
 @[expose, implicit_reducible] def ofNat : Nat → Level
-<<<<<<< HEAD
-  | 0   => levelZero
-=======
   | 0   => Level.zero
->>>>>>> v4.30.0-rc1
   | n+1 => mkLevelSucc (ofNat n)
 
 instance instOfNat (n : Nat) : OfNat Level n where

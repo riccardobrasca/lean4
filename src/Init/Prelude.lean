@@ -185,28 +185,6 @@ example : foo.default = (default, default) :=
 abbrev inferInstance {α : Sort u} [i : α] : α := i
 
 set_option checkBinderAnnotations false in
-<<<<<<< HEAD
-/-- `inferInstanceAs α` synthesizes an instance of type `α`, transporting it from a
-definitionally equal type if necessary. This is useful when `α` is definitionally equal to
-some `α'` for which instances are registered, as it prevents leaking the definition's RHS
-at lower transparencies.
-
-`inferInstanceAs` requires an expected type from context. If you just need to synthesize an
-instance without transporting between types, use `inferInstance` instead.
-
-Example:
-```
-def D := Nat
-instance : Inhabited D := inferInstanceAs (Inhabited Nat)
-```
-
-See `Lean.Meta.WrapInstance` for details.
--/
-abbrev «inferInstanceAs» (α : Sort u) [i : α] : α := i
-
-set_option bootstrap.inductiveCheckResultingUniverse false in
-=======
->>>>>>> v4.30.0-rc1
 /--
 `inferInstanceAs α` synthesizes an instance of type `α` and then adjusts it to conform to the
 expected type `β`, which must be inferable from context.
