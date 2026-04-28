@@ -436,16 +436,17 @@ _start:
 lean_object* v___x_4_; lean_object* v___x_5_; lean_object* v___x_6_; 
 v___x_4_ = lean_obj_once(&l_Lean_mkUnknownIdentifierMessageCore___at___00Lean_mkUnknownIdentifierMessage___at___00Lean_throwUnknownIdentifierAt___at___00Lean_throwUnknownConstantAt___at___00Lean_throwUnknownConstant___at___00Lean_getConstInfo___at___00Lean_Compiler_LCNF_StructProjCases_findStructCtorInfo_x3f_spec__0_spec__0_spec__1_spec__2_spec__3_spec__4___redArg___closed__1, &l_Lean_mkUnknownIdentifierMessageCore___at___00Lean_mkUnknownIdentifierMessage___at___00Lean_throwUnknownIdentifierAt___at___00Lean_throwUnknownConstantAt___at___00Lean_throwUnknownConstant___at___00Lean_getConstInfo___at___00Lean_Compiler_LCNF_StructProjCases_findStructCtorInfo_x3f_spec__0_spec__0_spec__1_spec__2_spec__3_spec__4___redArg___closed__1_once, _init_l_Lean_mkUnknownIdentifierMessageCore___at___00Lean_mkUnknownIdentifierMessage___at___00Lean_throwUnknownIdentifierAt___at___00Lean_throwUnknownConstantAt___at___00Lean_throwUnknownConstant___at___00Lean_getConstInfo___at___00Lean_Compiler_LCNF_StructProjCases_findStructCtorInfo_x3f_spec__0_spec__0_spec__1_spec__2_spec__3_spec__4___redArg___closed__1);
 v___x_5_ = lean_unsigned_to_nat(0u);
-v___x_6_ = lean_alloc_ctor(0, 9, 0);
+v___x_6_ = lean_alloc_ctor(0, 10, 0);
 lean_ctor_set(v___x_6_, 0, v___x_5_);
 lean_ctor_set(v___x_6_, 1, v___x_5_);
 lean_ctor_set(v___x_6_, 2, v___x_5_);
-lean_ctor_set(v___x_6_, 3, v___x_4_);
+lean_ctor_set(v___x_6_, 3, v___x_5_);
 lean_ctor_set(v___x_6_, 4, v___x_4_);
 lean_ctor_set(v___x_6_, 5, v___x_4_);
 lean_ctor_set(v___x_6_, 6, v___x_4_);
 lean_ctor_set(v___x_6_, 7, v___x_4_);
 lean_ctor_set(v___x_6_, 8, v___x_4_);
+lean_ctor_set(v___x_6_, 9, v___x_4_);
 return v___x_6_;
 }
 }
@@ -2138,16 +2139,17 @@ _start:
 lean_object* v___x_607_; lean_object* v___x_608_; lean_object* v___x_609_; 
 v___x_607_ = lean_obj_once(&l_Lean_Compiler_LCNF_StructProjCases_mkFieldParamsForCtorType___closed__4, &l_Lean_Compiler_LCNF_StructProjCases_mkFieldParamsForCtorType___closed__4_once, _init_l_Lean_Compiler_LCNF_StructProjCases_mkFieldParamsForCtorType___closed__4);
 v___x_608_ = lean_unsigned_to_nat(0u);
-v___x_609_ = lean_alloc_ctor(0, 9, 0);
+v___x_609_ = lean_alloc_ctor(0, 10, 0);
 lean_ctor_set(v___x_609_, 0, v___x_608_);
 lean_ctor_set(v___x_609_, 1, v___x_608_);
 lean_ctor_set(v___x_609_, 2, v___x_608_);
-lean_ctor_set(v___x_609_, 3, v___x_607_);
+lean_ctor_set(v___x_609_, 3, v___x_608_);
 lean_ctor_set(v___x_609_, 4, v___x_607_);
 lean_ctor_set(v___x_609_, 5, v___x_607_);
 lean_ctor_set(v___x_609_, 6, v___x_607_);
 lean_ctor_set(v___x_609_, 7, v___x_607_);
 lean_ctor_set(v___x_609_, 8, v___x_607_);
+lean_ctor_set(v___x_609_, 9, v___x_607_);
 return v___x_609_;
 }
 }
@@ -4407,18 +4409,18 @@ goto v_reusejp_1367_;
 }
 v_reusejp_1367_:
 {
-lean_object* v___x_1369_; lean_object* v___x_1370_; lean_object* v___x_1371_; lean_object* v___x_14855__overap_1372_; lean_object* v___x_1373_; 
+lean_object* v___x_1369_; lean_object* v___x_1370_; lean_object* v___x_1371_; lean_object* v___x_14857__overap_1372_; lean_object* v___x_1373_; 
 v___x_1369_ = l_StateRefT_x27_instMonad___redArg(v___x_1368_);
 v___x_1370_ = lean_obj_once(&l_panic___at___00Lean_Compiler_LCNF_StructProjCases_visitCode_spec__4___closed__0, &l_panic___at___00Lean_Compiler_LCNF_StructProjCases_visitCode_spec__4___closed__0_once, _init_l_panic___at___00Lean_Compiler_LCNF_StructProjCases_visitCode_spec__4___closed__0);
 v___x_1371_ = l_instInhabitedOfMonad___redArg(v___x_1369_, v___x_1370_);
-v___x_14855__overap_1372_ = lean_panic_fn_borrowed(v___x_1371_, v_msg_1313_);
+v___x_14857__overap_1372_ = lean_panic_fn_borrowed(v___x_1371_, v_msg_1313_);
 lean_dec(v___x_1371_);
 lean_inc(v___y_1318_);
 lean_inc_ref(v___y_1317_);
 lean_inc(v___y_1316_);
 lean_inc_ref(v___y_1315_);
 lean_inc(v___y_1314_);
-v___x_1373_ = lean_apply_6(v___x_14855__overap_1372_, v___y_1314_, v___y_1315_, v___y_1316_, v___y_1317_, v___y_1318_, lean_box(0));
+v___x_1373_ = lean_apply_6(v___x_14857__overap_1372_, v___y_1314_, v___y_1315_, v___y_1316_, v___y_1317_, v___y_1318_, lean_box(0));
 return v___x_1373_;
 }
 }

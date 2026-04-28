@@ -7,10 +7,12 @@ module
 
 prelude
 public import Lake.Config.Package
+public import Lake.Config.LakefileConfig
 public import Lake.Load.Config
 public import Lake.Toml.Decode
 import Lake.Toml.Load
 import Lean.Parser.Extension
+import Lake.Build.Infos
 import Init.Omega
 meta import Lake.Config.LakeConfig
 meta import Lake.Config.InputFileConfig
@@ -340,20 +342,20 @@ public instance : DecodeToml CacheServiceKind := ⟨CacheServiceKind.decodeToml�
 public structure TomlFieldInfo (σ : Type) where
   decodeAndSet : Table → Value → σ → DecodeM σ
 
-private abbrev TomlFieldInfos (σ : Type) :=
+abbrev TomlFieldInfos (σ : Type) :=
   NameMap (TomlFieldInfo σ)
 
-private def TomlFieldInfos.empty : TomlFieldInfos σ := {}
+def TomlFieldInfos.empty : TomlFieldInfos σ := {}
 
-@[inline] private def TomlFieldInfos.insert
+@[inline] def TomlFieldInfos.insert
   (name : Name) [DecodeField σ name] (infos : TomlFieldInfos σ)
 : TomlFieldInfos σ :=
   NameMap.insert infos name ⟨decodeField name⟩
 
-private class ConfigTomlInfo (α : Type) where
+class ConfigTomlInfo (α : Type) where
   fieldInfos : TomlFieldInfos α
 
-private def decodeTomlConfig
+def decodeTomlConfig
   [EmptyCollection α] [ConfigTomlInfo α] (t : Table)
 : Toml.DecodeM α :=
   t.foldM (init := ∅) fun cfg key val => do
@@ -371,7 +373,7 @@ section
 -- we can't use `in` as it is parsed as a single command and so the option would not influence the
 -- parser.
 set_option internal.parseQuotWithCurrentStage false
-private meta def genDecodeToml
+meta def genDecodeToml
   (cmds : Array Command)
   (tyName : Name) [info : ConfigInfo tyName]
   (exclude : Array Name := {})
@@ -415,23 +417,24 @@ local macro "gen_toml_decoders%" : command => do
 
 gen_toml_decoders%
 
-private structure DecodeTargetState (pkg : Name) where
+structure DecodeTargetState (pkg : Name) where
   decls : Array (PConfigDecl pkg) := #[]
   map : DNameMap (NConfigDecl pkg) := {}
   exeRoots : Lean.NameMap Name := {}
 
-private def decodeTargetDecls
+def decodeTargetDecls
   (pkg : Name) (prettyName : String) (t : Table)
 : DecodeM (Array (PConfigDecl pkg) × DNameMap (NConfigDecl pkg)) := do
   let r : DecodeTargetState pkg := {}
-  let r ← go r LeanLib.keyword LeanLib.configKind LeanLibConfig.decodeToml
-  let r ← go r LeanExe.keyword LeanExe.configKind LeanExeConfig.decodeToml
-  let r ← go r InputFile.keyword InputFile.configKind InputFileConfig.decodeToml
-  let r ← go r InputDir.keyword InputDir.configKind InputDirConfig.decodeToml
+  let r ← go r LeanLib.keyword LeanLib.configKind LeanLibConfig.decodeToml (by simp)
+  let r ← go r LeanExe.keyword LeanExe.configKind LeanExeConfig.decodeToml (by simp)
+  let r ← go r InputFile.keyword InputFile.configKind InputFileConfig.decodeToml (by simp)
+  let r ← go r InputDir.keyword InputDir.configKind InputDirConfig.decodeToml (by simp)
   return (r.decls, r.map)
 where
   go (r : DecodeTargetState pkg) kw kind
-      (decode : {n : Name} → Table → DecodeM (ConfigType kind pkg n)) := do
+      (decode : {n : Name} → Table → DecodeM (ConfigType kind pkg n))
+      (h : DataType kind = OpaqueConfigTarget kind) := do
     let some tableArrayVal := t.find? kw | return r
     let some vals ← tryDecode? tableArrayVal.decodeValueArray | return r
     vals.foldlM (init := r) fun r val => do
@@ -446,8 +449,10 @@ where
       else
         let config ← @decode name t
         let decl : NConfigDecl pkg name :=
-          -- Safety: By definition, config kind = facet kind for declarative configurations.
-          unsafe {pkg, name, kind, config, wf_data := lcProof}
+          -- Safety: By definition, for declarative configurations, the type of a package target
+          -- is its configuration's data kind (i.e., `CustomData pkg name = DataType kind`).
+          -- In the equivalent Lean configuration, this would hold by type family axiom.
+          unsafe {pkg, name, kind, config, wf_data := fun _ => ⟨lcProof, h⟩}
         -- Check that executables have distinct root module names
         let exeRoots ← id do
           if h : kind = LeanExe.configKind then
@@ -469,8 +474,8 @@ where
 
 /-! ## Root Loader -/
 
-/-- Load a `Package` from a Lake configuration file written in TOML. -/
-public def loadTomlConfig (cfg: LoadConfig) : LogIO Package := do
+/-- Load a Lake configuration from a file written in TOML. -/
+public def loadTomlConfig (cfg : LoadConfig) : LogIO LakefileConfig := do
   let input ← IO.FS.readFile cfg.configFile
   let ictx := mkInputContext input cfg.relConfigFile.toString
   match (← loadToml ictx |>.toBaseIO) with
@@ -482,21 +487,12 @@ public def loadTomlConfig (cfg: LoadConfig) : LogIO Package := do
       let keyName := baseName.num wsIdx
       let prettyName := baseName.toString (escape := false)
       let config ← @PackageConfig.decodeToml keyName origName table
+      let pkgDecl := {baseName, keyName, origName, config : PackageDecl}
       let (targetDecls, targetDeclMap) ← decodeTargetDecls keyName prettyName table
       let defaultTargets ← table.tryDecodeD `defaultTargets #[]
       let defaultTargets := defaultTargets.map stringToLegalOrSimpleName
       let depConfigs ← table.tryDecodeD `require #[]
-      return {
-        wsIdx, baseName, keyName, origName
-        dir := cfg.pkgDir
-        relDir := cfg.relPkgDir
-        configFile := cfg.configFile
-        relConfigFile := cfg.relConfigFile
-        scope := cfg.scope
-        remoteUrl := cfg.remoteUrl
-        config, depConfigs, targetDecls, targetDeclMap
-        defaultTargets
-      }
+      return {pkgDecl, depConfigs, targetDecls, targetDeclMap, defaultTargets}
     if errs.isEmpty then
       return pkg
     else
@@ -509,7 +505,7 @@ public def loadTomlConfig (cfg: LoadConfig) : LogIO Package := do
 /-! ## System Configuration Loader -/
 
 /-- Load the system Lake configuration from a TOML file. -/
-private def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO LoadedLakeConfig := do
+def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO LoadedLakeConfig := do
   let input ← IO.FS.readFile path
   let ictx := mkInputContext input path.toString
   match (← loadToml ictx |>.toBaseIO) with
@@ -568,7 +564,7 @@ private def loadLakeConfigCore (path : FilePath) (lakeEnv : Lake.Env) : LogIO Lo
   | .error log =>
     errorWithLog <| log.forM fun msg => do logError (← msg.toString)
 
-private def LoadedLakeConfig.mkDefault (lakeEnv : Lake.Env) : LoadedLakeConfig :=
+def LoadedLakeConfig.mkDefault (lakeEnv : Lake.Env) : LoadedLakeConfig :=
   let defaultService := .reservoirService lakeEnv.reservoirApiUrl
   let defaultServiceConfig := {name := "reservoir", kind := .reservoir, apiEndpoint := lakeEnv.reservoirApiUrl}
   {

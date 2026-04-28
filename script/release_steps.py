@@ -667,9 +667,9 @@ def execute_release_steps(repo, version, config):
         print(blue("Fetching latest changes from origin..."))
         run_command("git fetch origin", cwd=repo_path)
 
-        # Check if nightly-testing branch exists on origin
-        nightly_check = run_command("git ls-remote --heads origin nightly-testing", cwd=repo_path)
-        if not nightly_check.stdout.strip():
+        # Check if nightly-testing branch exists on origin (use local ref after fetch for exact match)
+        nightly_check = run_command("git show-ref --verify --quiet refs/remotes/origin/nightly-testing", cwd=repo_path, check=False)
+        if nightly_check.returncode != 0:
             print(yellow("No nightly-testing branch found on origin, skipping merge"))
         else:
             try:

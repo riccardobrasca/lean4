@@ -66,7 +66,7 @@ This is used during pattern matching and structural definitional equality tests
 to identify arguments that can be skipped or handled specially
 (e.g., instance arguments can be synthesized, proof arguments can be inferred).
 -/
-public structure ProofInstArgInfo where
+structure ProofInstArgInfo where
   /-- `true` if this argument is a proof (its type is a `Prop`). -/
   isProof    : Bool
   /-- `true` if this argument is a type class instance. -/
@@ -78,7 +78,7 @@ Information about a function symbol. It stores which argument positions are proo
 enabling optimizations during pattern matching and structural definitional equality tests
 such as skipping proof arguments or deferring instance synthesis.
 -/
-public structure ProofInstInfo where
+structure ProofInstInfo where
   /-- Information about each argument position. -/
   argsInfo : Array ProofInstArgInfo
   deriving Inhabited
@@ -152,8 +152,6 @@ structure Canon.State where
   cache       : Std.HashMap Expr Expr := {}
   /-- Cache for type-level canonicalization (reductions applied). -/
   cacheInType : Std.HashMap Expr Expr := {}
-  /-- Cache mapping instances to their canonical synthesized instances. -/
-  cacheInsts  : Std.HashMap Expr Expr := {}
 
 /-- Mutable state for the symbolic computation framework. -/
 structure State where
