@@ -21,7 +21,6 @@ uint8_t lean_nat_dec_le(lean_object*, lean_object*);
 uint8_t lean_nat_dec_lt(lean_object*, lean_object*);
 lean_object* lean_string_push(lean_object*, uint32_t);
 lean_object* l_mkPanicMessageWithDecl(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
-extern uint8_t l_instInhabitedUInt8;
 lean_object* lean_panic_fn_borrowed(lean_object*, lean_object*);
 uint8_t lean_string_get_byte_fast(lean_object*, lean_object*);
 lean_object* lean_string_utf8_byte_size(lean_object*);
@@ -176,7 +175,9 @@ LEAN_EXPORT lean_object* l_String_startValidPos(lean_object*);
 LEAN_EXPORT lean_object* l_String_startValidPos___boxed(lean_object*);
 LEAN_EXPORT lean_object* l_String_endValidPos(lean_object*);
 LEAN_EXPORT lean_object* l_String_endValidPos___boxed(lean_object*);
-LEAN_EXPORT lean_object* l_String_String_bytes(lean_object*);
+LEAN_EXPORT lean_object* l_String_bytes(lean_object*);
+LEAN_EXPORT lean_object* l_String_lengthAssumingAscii(lean_object*);
+LEAN_EXPORT lean_object* l_String_lengthAssumingAscii___boxed(lean_object*);
 LEAN_EXPORT lean_object* l_String_fromUTF8___redArg(lean_object* v_a_1_){
 _start:
 {
@@ -475,7 +476,7 @@ v_head_124_ = lean_ctor_get(v_x_122_, 0);
 lean_inc(v_head_124_);
 v_tail_125_ = lean_ctor_get(v_x_122_, 1);
 lean_inc(v_tail_125_);
-lean_dec_ref(v_x_122_);
+lean_dec_ref_known(v_x_122_, 2);
 v___x_126_ = l___private_Init_Data_String_Defs_0__String_intercalate_go(v_head_124_, v_s_121_, v_tail_125_);
 lean_dec(v_tail_125_);
 return v___x_126_;
@@ -906,7 +907,7 @@ LEAN_EXPORT uint8_t l_panic___at___00String_Slice_getUTF8Byte_x21_spec__0(lean_o
 _start:
 {
 uint8_t v___x_295_; lean_object* v___x_296_; lean_object* v___x_297_; uint8_t v___x_298_; 
-v___x_295_ = l_instInhabitedUInt8;
+v___x_295_ = 0;
 v___x_296_ = lean_box(v___x_295_);
 v___x_297_ = lean_panic_fn_borrowed(v___x_296_, v_msg_294_);
 lean_dec(v___x_296_);
@@ -1382,7 +1383,7 @@ lean_dec_ref(v_s_473_);
 return v_res_474_;
 }
 }
-LEAN_EXPORT lean_object* l_String_String_bytes(lean_object* v_s_475_){
+LEAN_EXPORT lean_object* l_String_bytes(lean_object* v_s_475_){
 _start:
 {
 lean_object* v___x_476_; 
@@ -1390,14 +1391,33 @@ v___x_476_ = lean_string_to_utf8(v_s_475_);
 return v___x_476_;
 }
 }
+LEAN_EXPORT lean_object* l_String_lengthAssumingAscii(lean_object* v_s_477_){
+_start:
+{
+lean_object* v___x_478_; 
+v___x_478_ = lean_string_utf8_byte_size(v_s_477_);
+return v___x_478_;
+}
+}
+LEAN_EXPORT lean_object* l_String_lengthAssumingAscii___boxed(lean_object* v_s_479_){
+_start:
+{
+lean_object* v_res_480_; 
+v_res_480_ = l_String_lengthAssumingAscii(v_s_479_);
+lean_dec_ref(v_s_479_);
+return v_res_480_;
+}
+}
 lean_object* runtime_initialize_Init_Data_String_PosRaw(uint8_t builtin);
 lean_object* runtime_initialize_Init_Data_ByteArray_Lemmas(uint8_t builtin);
 lean_object* runtime_initialize_Init_Omega(uint8_t builtin);
+void lean_initialize_runtime_module();
 static bool _G_runtime_initialized = false;
 LEAN_EXPORT lean_object* runtime_initialize_Init_Data_String_Defs(uint8_t builtin) {
 lean_object * res;
 if (_G_runtime_initialized) return lean_io_result_mk_ok(lean_box(0));
 _G_runtime_initialized = true;
+lean_initialize_runtime_module();
 res = runtime_initialize_Init_Data_String_PosRaw(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);

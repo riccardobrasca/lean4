@@ -9,23 +9,23 @@ endif()
 option(USE_MIMALLOC "use mimalloc" ON)
 
 # store all variables passed on the command line into CL_ARGS so we can pass them to the stage builds
-# https://stackoverflow.com/a/48555098/161659
 # MUST be done before call to 'project'
 # Use standard release build (discarding LEAN_EXTRA_CXX_FLAGS etc.) for stage0 by default since it is assumed to be "good", but still pass through CMake platform arguments (compiler, toolchain file, ..).
 # Use `STAGE0_` prefix to pass variables to stage0 explicitly.
 get_cmake_property(vars CACHE_VARIABLES)
 foreach(var ${vars})
-  get_property(currentHelpString CACHE "${var}" PROPERTY HELPSTRING)
+  get_property(currentType CACHE "${var}" PROPERTY TYPE)
   if(var MATCHES "STAGE0_(.*)")
     list(APPEND STAGE0_ARGS "-D${CMAKE_MATCH_1}=${${var}}")
   elseif(var MATCHES "STAGE1_(.*)")
     list(APPEND STAGE1_ARGS "-D${CMAKE_MATCH_1}=${${var}}")
-  elseif(currentHelpString MATCHES "No help, variable specified on the command line." OR currentHelpString STREQUAL "")
+  # NOTE: does not catch `-DFOO:BAR=` typed uses
+  elseif(currentType STREQUAL "UNINITIALIZED")
     list(APPEND CL_ARGS "-D${var}=${${var}}")
     if(var MATCHES "USE_GMP|CHECK_OLEAN_VERSION|LEAN_VERSION_.*|LEAN_SPECIAL_VERSION_DESC")
       # must forward options that generate incompatible .olean format
       list(APPEND STAGE0_ARGS "-D${var}=${${var}}")
-    elseif(var MATCHES "LLVM*|PKG_CONFIG|USE_LAKE|USE_MIMALLOC")
+    elseif(var MATCHES "LLVM*|PKG_CONFIG|USE_LAKE|USE_MIMALLOC|FORCE_GMP")
       list(APPEND STAGE0_ARGS "-D${var}=${${var}}")
     endif()
   elseif(var MATCHES "USE_MIMALLOC")
@@ -52,7 +52,8 @@ if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
       # Use same platform flags as for Lean executables, in particular from `prepare-llvm-linux.sh`,
       # but not Lean-specific `LEAN_EXTRA_CXX_FLAGS` such as fsanitize.
       set(CADICAL_CXXFLAGS "${CMAKE_CXX_FLAGS}")
-      set(CADICAL_LDFLAGS "-Wl,-rpath=\\$$ORIGIN/../lib")
+      string(REPLACE "ROOT" "${CMAKE_BINARY_DIR}/stage1" CADICAL_INTERNAL_LINKER_FLAGS "${LEANC_INTERNAL_LINKER_FLAGS}")
+      set(CADICAL_LDFLAGS "${CADICAL_INTERNAL_LINKER_FLAGS} -Wl,-rpath=\\$$ORIGIN/../lib")
     endif()
     find_program(CCACHE ccache)
     if(CCACHE)
@@ -80,7 +81,7 @@ if(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
   endif()
   find_program(LEANTAR leantar)
   if(NOT LEANTAR)
-    set(LEANTAR_VERSION v0.1.19)
+    set(LEANTAR_VERSION v0.1.20)
     if(CMAKE_SYSTEM_NAME MATCHES "Windows")
       set(LEANTAR_ARCHIVE_SUFFIX .zip)
       set(LEANTAR_TARGET x86_64-pc-windows-msvc)
@@ -123,7 +124,8 @@ if(USE_MIMALLOC)
   FetchContent_Declare(
     mimalloc
     GIT_REPOSITORY https://github.com/microsoft/mimalloc
-    GIT_TAG v2.2.3
+    GIT_BRANCH dev3
+    GIT_TAG v3.4.1
     # Unnecessarily deep directory structure, but it saves us from a complicated
     # stage0 update for now. If we ever update the other dependencies like
     # cadical, it might be worth reorganizing the directory structure.

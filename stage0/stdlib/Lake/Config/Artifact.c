@@ -29,7 +29,7 @@ lean_object* lean_mk_empty_array_with_capacity(lean_object*);
 lean_object* l_Lean_Json_getStr_x3f(lean_object*);
 lean_object* lean_string_append(lean_object*, lean_object*);
 lean_object* lean_string_utf8_byte_size(lean_object*);
-lean_object* lean_string_utf8_extract(lean_object*, lean_object*, lean_object*);
+lean_object* lean_string_utf8_extract_fast(lean_object*, lean_object*, lean_object*);
 lean_object* l_Lake_Hash_ofHex_x3f(lean_object*);
 lean_object* l_Lake_lowerHexUInt64(uint64_t);
 static const lean_string_object l_Lake_artifactPath___closed__0_value = {.m_header = {.m_rc = 0, .m_cs_sz = 0, .m_other = 0, .m_tag = 249}, .m_size = 2, .m_capacity = 2, .m_length = 1, .m_data = "."};
@@ -548,7 +548,7 @@ lean_ctor_set(v___x_207_, 1, v_searcher_205_);
 lean_ctor_set(v___x_207_, 2, v___x_206_);
 v___x_208_ = lean_box(0);
 v___x_209_ = l_WellFounded_opaqueFix_u2083___at___00Lake_ArtifactDescr_ofFilePath_x3f_spec__0___redArg(v___x_207_, v_path_171_, v_searcher_205_, v___x_208_);
-lean_dec_ref(v___x_207_);
+lean_dec_ref_known(v___x_207_, 3);
 if (lean_obj_tag(v___x_209_) == 0)
 {
 v___y_173_ = v___x_206_;
@@ -559,7 +559,7 @@ else
 lean_object* v_val_210_; 
 v_val_210_ = lean_ctor_get(v___x_209_, 0);
 lean_inc(v_val_210_);
-lean_dec_ref(v___x_209_);
+lean_dec_ref_known(v___x_209_, 1);
 v___y_173_ = v_val_210_;
 goto v___jp_172_;
 }
@@ -572,7 +572,7 @@ if (v___x_175_ == 0)
 {
 lean_object* v___x_176_; lean_object* v___x_177_; lean_object* v___x_178_; 
 v___x_176_ = lean_unsigned_to_nat(0u);
-v___x_177_ = lean_string_utf8_extract(v_path_171_, v___x_176_, v___y_173_);
+v___x_177_ = lean_string_utf8_extract_fast(v_path_171_, v___x_176_, v___y_173_);
 v___x_178_ = l_Lake_Hash_ofHex_x3f(v___x_177_);
 lean_dec_ref(v___x_177_);
 if (lean_obj_tag(v___x_178_) == 1)
@@ -599,7 +599,7 @@ v_resetjp_180_:
 lean_object* v___x_183_; lean_object* v_ext_184_; lean_object* v___x_185_; uint64_t v___x_186_; lean_object* v___x_188_; 
 v___x_183_ = lean_string_utf8_next_fast(v_path_171_, v___y_173_);
 lean_dec(v___y_173_);
-v_ext_184_ = lean_string_utf8_extract(v_path_171_, v___x_183_, v___x_174_);
+v_ext_184_ = lean_string_utf8_extract_fast(v_path_171_, v___x_183_, v___x_174_);
 lean_dec_ref(v_path_171_);
 v___x_185_ = lean_alloc_ctor(0, 1, 8);
 lean_ctor_set(v___x_185_, 0, v_ext_184_);
@@ -775,7 +775,7 @@ else
 lean_object* v_a_240_; lean_object* v___x_241_; 
 v_a_240_ = lean_ctor_get(v___x_229_, 0);
 lean_inc(v_a_240_);
-lean_dec_ref(v___x_229_);
+lean_dec_ref_known(v___x_229_, 1);
 v___x_241_ = l_Lake_ArtifactDescr_ofFilePath_x3f(v_a_240_);
 return v___x_241_;
 }
@@ -1126,11 +1126,13 @@ return v_res_378_;
 }
 }
 lean_object* runtime_initialize_Lake_Build_Trace(uint8_t builtin);
+void lean_initialize();
 static bool _G_runtime_initialized = false;
 LEAN_EXPORT lean_object* runtime_initialize_Lake_Config_Artifact(uint8_t builtin) {
 lean_object * res;
 if (_G_runtime_initialized) return lean_io_result_mk_ok(lean_box(0));
 _G_runtime_initialized = true;
+lean_initialize();
 res = runtime_initialize_Lake_Build_Trace(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
