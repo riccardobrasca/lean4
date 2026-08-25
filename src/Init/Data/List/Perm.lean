@@ -478,11 +478,31 @@ end LawfulBEq
 they have the same elements. -/
 theorem perm_ext_iff_of_nodup {l₁ l₂ : List α} (d₁ : Nodup l₁) (d₂ : Nodup l₂) :
     l₁ ~ l₂ ↔ ∀ a, a ∈ l₁ ↔ a ∈ l₂ := by
-  classical
-  rw [perm_iff_count]
-  refine ⟨fun h a => by rw [← count_pos_iff, ← count_pos_iff, h], fun h a => ?_⟩
-  rw [d₁.count, d₂.count]
-  simp only [h a]
+  refine ⟨fun p _ => p.mem_iff, fun H => ?_⟩
+  induction d₁ generalizing l₂ with
+  | nil =>
+    have h : l₂ = [] := eq_nil_iff_forall_not_mem.2 fun b hb => not_mem_nil ((H b).2 hb)
+    subst h
+    exact .nil
+  | @cons a l h₁ _ ih =>
+    obtain ⟨s, t, rfl⟩ := append_of_mem ((H a).1 mem_cons_self)
+    obtain ⟨ds, dt, hst⟩ := nodup_append.1 d₂
+    have has : a ∉ s := fun h => hst a h a mem_cons_self rfl
+    have hat : a ∉ t := (nodup_cons.1 dt).1
+    refine perm_cons_append_cons a (ih (nodup_append.2 ⟨ds, (nodup_cons.1 dt).2,
+      fun x hx y hy => hst x hx y (mem_cons_of_mem _ hy)⟩) fun b => ⟨fun hb => ?_, fun hb => ?_⟩)
+    · rcases mem_append.1 ((H b).1 (mem_cons_of_mem _ hb)) with h | h
+      · exact mem_append_left _ h
+      · rcases mem_cons.1 h with rfl | h
+        · exact absurd rfl (h₁ b hb)
+        · exact mem_append_right _ h
+    · have hb' : b ∈ s ++ a :: t := by
+        rcases mem_append.1 hb with h | h
+        · exact mem_append_left _ h
+        · exact mem_append_right _ (mem_cons_of_mem _ h)
+      rcases mem_cons.1 ((H b).2 hb') with rfl | h
+      · exact ((mem_append.1 hb).elim has hat).elim
+      · exact h
 
 /-- A list with no duplicates that is a subset of another list is no longer than
 that list. -/
