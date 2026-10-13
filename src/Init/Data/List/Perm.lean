@@ -470,7 +470,7 @@ theorem perm_insert_swap (x y : α) (l : List α) :
   have : DecidableEq α := instDecidableEqOfLawfulBEq
   if xy : x = y then simp [xy] else
   simp [List.insert, xl, yl, xy, Ne.symm xy]
-  constructor
+  constructor!
 
 end LawfulBEq
 
